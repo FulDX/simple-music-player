@@ -19,26 +19,26 @@ const songs = [
   {
     title: "時の傷痕 ハジマリノ 鼓動",
     artist: "Yasunori Mitsuda",
-    src: "/media/mp3/ndak tawu.mp3",
-    img: "/media/img/1.jpg",
+    src: "../media/mp3/ndak tawu.mp3",
+    img: "../media/img/1.jpg",
   },
   {
     title: "Mimpi Buruk",
     artist: "Lil Salmonella",
-    src: "/media/mp3/Lil Salmonela - Mimpi Buruk.mp3",
-    img: "/media/img/mimpiburuk.jpg",
+    src: "../media/mp3/Lil Salmonela - Mimpi Buruk.mp3",
+    img: "../media/img/mimpiburuk.jpg",
   },
   {
     title: "Odorouze",
     artist: "Yorushika",
-    src: "/media/mp3/odorouze.mp3",
-    img: "/media/img/odorouze.jpg",
+    src: "../media/mp3/odorouze.mp3",
+    img: "../media/img/odorouze.jpg",
   },
   {
     title: "Nandemonaiya",
     artist: "RADWIMPS",
-    src: "/media/mp3/Nandemonaiya.mp3",
-    img: "/media/img/radwimps.jpg",
+    src: "../media/mp3/Nandemonaiya.mp3",
+    img: "../media/img/radwimps.jpg",
   },
 ];
 
