@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/src/style.css" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=repeat"
+    />
+    <script
+      src="https://kit.fontawesome.com/5cfb36ae49.js"
+      crossorigin="anonymous"
+    ></script>
+    <title>Musica</title>
+  </head>
+  <body class="bg-[#121212] text-white">
+    <div class="grid">
+      <div class="relative flex items-center h-14 px-6 py-3 sm:h-18">
+        <button class="h-10">
+          <i class="fa-solid fa-house text-2xl sm:text-3xl"></i>
+        </button>
+        <h1
+          class="absolute left-1/2 -translate-x-1/2 text-4xl font-semibold text-green-400 sm:text-5xl"
+        >
+          Musica
+        </h1>
+        <button class="ml-auto h-10">
+          <i class="fa-solid fa-user text-2xl"></i>
+        </button>
+      </div>
+      <div class="flex flex-col items-center gap-3 py-6">
+        <img
+          src="https://picsum.photos/800/800"
+          alt=""
+          class="w-88 h-88 object-cover rounded-lg shadow-lg"
+        />
+        <div class="text-center">
+          <h1 class="text-3xl font-semibold">Ini Judul</h1>
+          <h2 class="text-gray-400">Ini subjudul</h2>
+        </div>
+      </div>
+      <div class="control flex flex-col items-center gap-5 py-6">
+        <!-- slider -->
+        <div class="w-80 flex flex-col gap-2">
+          <input
+            id="slider"
+            type="range"
+            min="1"
+            max="100"
+            value="0"
+            class="w-full appearance-none bg-transparent cursor-pointer"
+          />
+          <div class="flex justify-between text-xs text-gray-400">
+            <span id="current-time">0:00</span>
+            <span id="duration">0:00</span>
+          </div>
+        </div>
+
+        <!-- button -->
+        <div class="w-80 grid grid-cols-3 items-center">
+          <!-- KIRI (Shuffle) -->
+          <div class="flex justify-start">
+            <button class="text-xl aspect-square">
+              <i class="fa-solid fa-shuffle"></i>
+            </button>
+          </div>
+
+          <!-- TENGAH (Main Controls) -->
+          <div class="flex items-center justify-center gap-6">
+            <div
+              class="cursor-pointer w-12 h-12 aspect-square flex items-center justify-center rounded-full bg-green-400 text-black text-lg"
+            >
+              <i class="fa-solid fa-backward-step"></i>
+            </div>
+
+            <div
+              onclick="playPause()"
+              class="cursor-pointer w-14 h-14 aspect-square flex items-center justify-center rounded-full bg-green-400 text-black text-xl shadow-lg"
+              id="ctrlIcon"
+            >
+              <i class="fa-solid fa-play"></i>
+            </div>
+
+            <div
+              class="cursor-pointer w-12 h-12 aspect-square flex items-center justify-center rounded-full bg-green-400 text-black text-lg"
+            >
+              <i class="fa-solid fa-forward-step"></i>
+            </div>
+          </div>
+
+          <!-- KANAN (Repeat) -->
+          <div
+            class="flex justify-end text-xl cursor-pointer"
+            id="repeat"
+            onclick="repeatFunc()"
+          >
+            <i class="fa-solid fa-repeat"></i>
+          </div>
+          <audio id="song">
+            <source src="/media/mp3/ndak tawu.mp3" type="audio/mpeg" />
+            Your browser does not support the audio element.
+          </audio>
+        </div>
+      </div>
+    </div>
+    <script src="/src/script.js"></script>
+  </body>
+</html>
