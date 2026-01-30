@@ -31,13 +31,14 @@
       </div>
       <div class="flex flex-col items-center gap-3 py-6">
         <img
-          src="https://picsum.photos/800/800"
+          id="image"
+          src="/media/img/1.jpg"
           alt=""
           class="w-88 h-88 object-cover rounded-lg shadow-lg"
         />
         <div class="text-center">
-          <h1 class="text-3xl font-semibold">Ini Judul</h1>
-          <h2 class="text-gray-400">Ini subjudul</h2>
+          <h1 id="title" class="text-3xl font-semibold">Ini Judul</h1>
+          <h2 id="artist" class="text-gray-400">Ini subjudul</h2>
         </div>
       </div>
       <div class="control flex flex-col items-center gap-5 py-6">
@@ -46,7 +47,7 @@
           <input
             id="slider"
             type="range"
-            min="1"
+            min="0"
             max="100"
             value="0"
             class="w-full appearance-none bg-transparent cursor-pointer"
@@ -58,52 +59,56 @@
         </div>
 
         <!-- button -->
-        <div class="w-80 grid grid-cols-3 items-center">
-          <!-- KIRI (Shuffle) -->
-          <div class="flex justify-start">
-            <button class="text-xl aspect-square">
-              <i class="fa-solid fa-shuffle"></i>
-            </button>
-          </div>
+        <div class="w-80 flex items-center justify-between">
+          <!-- shuffle -->
+          <button
+            onclick="shuffleFunc()"
+            id="shuffle"
+            class="cursor-pointer text-xl w-10 h-10 flex items-center"
+          >
+            <i class="fa-solid fa-shuffle"></i>
+          </button>
 
-          <!-- TENGAH (Main Controls) -->
-          <div class="flex items-center justify-center gap-6">
-            <div
-              class="cursor-pointer w-12 h-12 aspect-square flex items-center justify-center rounded-full bg-green-400 text-black text-lg"
+          <!-- control button -->
+          <div class="flex items-center gap-6">
+            <button
+              onclick="prevSong()"
+              class="cursor-pointer active:scale-90 transition w-12 h-12 flex items-center justify-center rounded-full bg-green-400 text-black text-lg"
             >
               <i class="fa-solid fa-backward-step"></i>
-            </div>
+            </button>
 
-            <div
-              onclick="playPause()"
-              class="cursor-pointer w-14 h-14 aspect-square flex items-center justify-center rounded-full bg-green-400 text-black text-xl shadow-lg"
+            <button
+              onclick="togglePlay()"
+              class="cursor-pointer active:scale-90 transition w-14 h-14 flex items-center justify-center rounded-full bg-green-400 text-black text-xl shadow-lg"
               id="ctrlIcon"
             >
               <i class="fa-solid fa-play"></i>
-            </div>
+            </button>
 
-            <div
-              class="cursor-pointer w-12 h-12 aspect-square flex items-center justify-center rounded-full bg-green-400 text-black text-lg"
+            <button
+              onclick="nextSong()"
+              class="cursor-pointer active:scale-90 transition w-12 h-12 flex items-center justify-center rounded-full bg-green-400 text-black text-lg"
             >
               <i class="fa-solid fa-forward-step"></i>
-            </div>
+            </button>
           </div>
 
-          <!-- KANAN (Repeat) -->
-          <div
-            class="flex justify-end text-xl cursor-pointer"
-            id="repeat"
+          <!-- repeat -->
+          <button
             onclick="repeatFunc()"
+            id="repeat"
+            class="cursor-pointer text-xl w-10 h-10 flex items-center justify-end"
           >
             <i class="fa-solid fa-repeat"></i>
-          </div>
-          <audio id="song">
-            <source src="/media/mp3/ndak tawu.mp3" type="audio/mpeg" />
-            Your browser does not support the audio element.
-          </audio>
+          </button>
         </div>
       </div>
     </div>
+    <audio id="song">
+      <source src="/media/mp3/ndak tawu.mp3" type="audio/mpeg" />
+      Your browser does not support the audio element.
+    </audio>
     <script src="/src/script.js"></script>
   </body>
 </html>
