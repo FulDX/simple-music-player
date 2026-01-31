@@ -4,100 +4,93 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="../src/style.css" />
-    <link rel="stylesheet" href="../assets/all.min.css">
-    <link rel="stylesheet" href="../assets/fontawesome.min.css">
+    <link rel="stylesheet" href="../assets/all.min.css" />
+    <link rel="stylesheet" href="../assets/fontawesome.min.css" />
     <title>Musica</title>
   </head>
   <body class="bg-[#121212] text-white">
     <div class="grid">
-      <div class="relative flex items-center h-14 px-6 py-3 sm:h-18">
+      <!-- header -->
+      <div class="relative flex items-center h-14 px-6 py-3 sm:h-18 lg:h-20">
         <button class="h-10">
-          <i class="fa-solid fa-house text-2xl sm:text-3xl"></i>
+        <i class="fa-solid fa-house text-2xl sm:text-3xl lg:text-4xl"></i>
         </button>
         <h1
-          class="absolute left-1/2 -translate-x-1/2 text-4xl font-semibold text-green-400 sm:text-5xl"
-        >
+          class="absolute left-1/2 -translate-x-1/2 text-4xl font-semibold text-green-400 sm:text-5xl lg:text-6xl"
+          >
           Musica
         </h1>
         <button class="ml-auto h-10">
-          <i class="fa-solid fa-user text-2xl"></i>
+        <i class="fa-solid fa-user text-2xl sm:text-3xl lg:text-4xl"></i>
         </button>
       </div>
-      <div class="flex flex-col items-center gap-3 py-6">
+      <!-- media -->
+      <!-- MEDIA + INFO WRAPPER -->
+      <div class="py-5 lg:py-20 lg:px-10 flex flex-col items-center lg:justify-evenly text-center lg:flex-row lg:text-left lg:items-center lg:gap-10">
+        <!-- Cover -->
         <img
           id="image"
           src="/media/img/1.jpg"
           alt=""
-          class="w-88 h-88 object-cover rounded-lg shadow-lg"
-        />
-        <div class="text-center">
-          <h1 id="title" class="text-3xl font-semibold">Ini Judul</h1>
-          <h2 id="artist" class="text-gray-400">Ini subjudul</h2>
-        </div>
-      </div>
-      <div class="control flex flex-col items-center gap-5 py-6">
-        <!-- slider -->
-        <div class="w-80 flex flex-col gap-2">
-          <input
-            id="slider"
-            type="range"
-            min="0"
-            max="100"
-            value="0"
-            class="w-full appearance-none bg-transparent cursor-pointer"
+          class="w-88 h-88 object-cover rounded-3xl shadow-2xl
+          lg:w-96 lg:h-96"
           />
-          <div class="flex justify-between text-xs text-gray-400">
-            <span id="current-time">0:00</span>
-            <span id="duration">0:00</span>
+        <!-- Title + Artist + Controls -->
+        <div class="mt-6 lg:mt-0 gap-6 flex flex-col w-full max-w-88 lg:max-w-200 lg:h-96 min-w-0 lg:justify-between">
+          <!-- Song Info -->
+          <div class="text-center lg:mt-0 lg:text-left">
+            <h1 id="title" class="text-3xl mb-1 lg:mb-4 font-semibold lg:text-5xl truncate">
+              Ini Judul
+            </h1>
+            <h2 id="artist" class="text-gray-400 text-lg lg:text-2xl truncate">
+              Ini subjudul
+            </h2>
           </div>
-        </div>
-
-        <!-- button -->
-        <div class="w-80 flex items-center justify-between">
-          <!-- shuffle -->
-          <button
-            onclick="shuffleFunc()"
-            id="shuffle"
-            class="cursor-pointer text-xl w-10 h-10 flex items-center"
-          >
-            <i class="fa-solid fa-shuffle"></i>
-          </button>
-
-          <!-- control button -->
-          <div class="flex items-center gap-6">
-            <button
-              onclick="prevSong()"
-              class="cursor-pointer active:scale-90 transition w-12 h-12 flex items-center justify-center rounded-full bg-green-400 text-black text-lg"
-            >
-              <i class="fa-solid fa-backward-step"></i>
-            </button>
-
-            <button
-              onclick="togglePlay()"
-              class="cursor-pointer active:scale-90 transition w-14 h-14 flex items-center justify-center rounded-full bg-green-400 text-black text-xl shadow-lg"
-              id="ctrlIcon"
-            >
-              <i class="fa-solid fa-play"></i>
-            </button>
-
-            <button
-              onclick="nextSong()"
-              class="cursor-pointer active:scale-90 transition w-12 h-12 flex items-center justify-center rounded-full bg-green-400 text-black text-lg"
-            >
-              <i class="fa-solid fa-forward-step"></i>
-            </button>
+          <!-- Bottom Section (Slider + Controls) -->
+          <div class="flex flex-col gap-6">
+            <!-- Slider -->
+            <div class="w-full max-w-200 min-w-0">
+              <input
+                id="slider"
+                type="range"
+                min="0"
+                max="100"
+                value="0"
+                class="w-full appearance-none bg-transparent cursor-pointer"
+                />
+              <div class="flex justify-between text-xs text-gray-400">
+                <span id="current-time">0:00</span>
+                <span id="duration">0:00</span>
+              </div>
+            </div>
+            <!-- Controls -->
+            <div class="w-full max-w-200 flex items-center justify-between min-w-0">
+              <button onclick="shuffleFunc()" id="shuffle" class="text-xl lg:text-2xl">
+              <i class="fa-solid fa-shuffle"></i>
+              </button>
+              <div class="flex items-center gap-6 lg:gap-10">
+                <button onclick="prevSong()"
+                  class="active:scale-90 transition w-12 h-12 flex items-center justify-center rounded-full bg-green-400 text-black text-lg lg:w-16 lg:h-16 lg:text-xl">
+                <i class="fa-solid fa-backward-step"></i>
+                </button>
+                <button onclick="togglePlay()" id="ctrlIcon"
+                  class="active:scale-90 transition w-14 h-14 flex items-center justify-center rounded-full bg-green-400 text-black text-xl shadow-lg lg:w-20 lg:h-20 lg:text-2xl">
+                <i class="fa-solid fa-play"></i>
+                </button>
+                <button onclick="nextSong()"
+                  class="active:scale-90 transition w-12 h-12 flex items-center justify-center rounded-full bg-green-400 text-black text-lg lg:w-16 lg:h-16 lg:text-xl">
+                <i class="fa-solid fa-forward-step"></i>
+                </button>
+              </div>
+              <button onclick="repeatFunc()" id="repeat" class="text-xl lg:text-2xl">
+              <i class="fa-solid fa-repeat"></i>
+              </button>
+            </div>
           </div>
-
-          <!-- repeat -->
-          <button
-            onclick="repeatFunc()"
-            id="repeat"
-            class="cursor-pointer text-xl w-10 h-10 flex items-center justify-end"
-          >
-            <i class="fa-solid fa-repeat"></i>
-          </button>
         </div>
       </div>
+    </div>
+    </div>
     </div>
     <audio id="song">
       <source src="../media/mp3/ndak tawu.mp3" type="audio/mpeg" />
