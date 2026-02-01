@@ -65,24 +65,24 @@
             </div>
             <!-- Controls -->
             <div class="w-full max-w-200 flex items-center justify-between min-w-0">
-              <button onclick="shuffleFunc()" id="shuffle" class="text-xl lg:text-2xl">
+              <button onclick="" id="btnShuffle" class="text-xl lg:text-2xl">
               <i class="fa-solid fa-shuffle"></i>
               </button>
               <div class="flex items-center gap-6 lg:gap-10">
-                <button onclick="prevSong()"
+                <button onclick="" id="btnPrev"
                   class="active:scale-90 transition w-12 h-12 flex items-center justify-center rounded-full bg-green-400 text-black text-lg lg:w-16 lg:h-16 lg:text-xl">
                 <i class="fa-solid fa-backward-step"></i>
                 </button>
-                <button onclick="togglePlay()" id="ctrlIcon"
+                <button onclick="" id="btnCtrl"
                   class="active:scale-90 transition w-14 h-14 flex items-center justify-center rounded-full bg-green-400 text-black text-xl shadow-lg lg:w-20 lg:h-20 lg:text-2xl">
                 <i class="fa-solid fa-play"></i>
                 </button>
-                <button onclick="nextSong()"
+                <button onclick="" id="btnNext"
                   class="active:scale-90 transition w-12 h-12 flex items-center justify-center rounded-full bg-green-400 text-black text-lg lg:w-16 lg:h-16 lg:text-xl">
                 <i class="fa-solid fa-forward-step"></i>
                 </button>
               </div>
-              <button onclick="repeatFunc()" id="repeat" class="text-xl lg:text-2xl">
+              <button onclick="" id="btnRepeat" class="text-xl lg:text-2xl">
               <i class="fa-solid fa-repeat"></i>
               </button>
             </div>
@@ -96,6 +96,6 @@
       <source src="../media/mp3/ndak tawu.mp3" type="audio/mpeg" />
       Your browser does not support the audio element.
     </audio>
-    <script src="../src/script.js"></script>
+    <script type="module" src="../src/script.js"></script>
   </body>
 </html>
