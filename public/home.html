@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../src/style.css" />
+    <link rel="stylesheet" href="../assets/all.min.css" />
+    <link rel="stylesheet" href="../assets/fontawesome.min.css" />
+    <title>Musica</title>
+  </head>
+  <body class="bg-[#121212] text-white m-0">
+    <div
+      class="min-h-screen lg:grid lg:grid-cols-[200px_1fr] lg:grid-rows-[60px_1fr] lg:gap-0"
+    >
+      <!-- Sidebar / Navbar desktop -->
+      <aside
+        class="border hidden lg:flex lg:flex-col lg:row-span-2 lg:col-start-1 lg:col-end-2 bg-[#121212] p-4 gap-4"
+      >
+        <button
+          class="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-green-400/20 transition"
+        >
+          <i class="fa-solid fa-music"></i>
+          <span>Music Library</span>
+        </button>
+        <button
+          class="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-green-400/20 transition"
+        >
+          <i class="fa-regular fa-circle-play"></i>
+          <span>Playlist</span>
+        </button>
+        <button
+          class="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-green-400/20 transition"
+        >
+          <i class="fa-solid fa-upload"></i>
+          <span>Upload</span>
+        </button>
+      </aside>
+      <!-- End of sidebar -->
+
+      <!-- Header desktop -->
+      <header
+        class="border hidden lg:flex items-center justify-between px-10 bg-[#121212] lg:col-start-2 lg:col-end-3 lg:row-start-1 lg:row-end-2"
+      >
+        <h1 class="text-2xl font-bold text-green-400">Musica</h1>
+        <form class="flex items-center" onsubmit="handleSearch(event)">
+          <input
+            type="text"
+            name="query"
+            placeholder="Search..."
+            class="bg-[#1e1e1e] text-white placeholder-gray-400 px-4 py-2 rounded-l-full focus:outline-none focus:ring-2 focus:ring-green-400"
+          />
+          <button
+            type="submit"
+            class="bg-green-400 text-black px-4 py-2 rounded-r-full hover:bg-green-500 transition"
+          >
+            <i class="fa-solid fa-magnifying-glass"></i>
+          </button>
+        </form>
+      </header>
+      <!-- End of header -->
+
+      <!-- Main content -->
+      <main
+        class="border lg:col-start-2 lg:col-end-3 lg:row-start-2 lg:row-end-3 p-6 pt-20 lg:pt-6"
+      >
+        main content
+      </main>
+      <!-- end of main content -->
+
+      <!-- Navbar mobile -->
+      <nav
+        class="lg:hidden fixed top-0 left-0 w-full bg-[#121212] text-white px-4 py-3 flex items-center justify-between shadow-md z-50"
+      >
+        <button id="btnMenu" class="text-2xl z-10">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+        <h1 class="text-2xl font-bold text-green-400">Musica</h1>
+        <button class="text-xl z-10">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </button>
+
+        <!-- Dropdown -->
+        <div
+          id="mobileMenu"
+          class="absolute top-full left-0 w-full bg-[#121212] text-white flex flex-col gap-3 px-6 py-4 shadow-lg transform -translate-y-2 opacity-0 transition-all duration-300 ease-out pointer-events-none"
+        >
+          <button
+            class="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-green-400/20 transition"
+          >
+            <i class="fa-solid fa-music"></i>
+            <span>Music Library</span>
+          </button>
+          <button
+            class="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-green-400/20 transition"
+          >
+            <i class="fa-regular fa-circle-play"></i>
+            <span>Playlist</span>
+          </button>
+          <button
+            class="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-green-400/20 transition"
+          >
+            <i class="fa-solid fa-upload"></i>
+            <span>Upload</span>
+          </button>
+
+          <form class="flex items-center mt-2" onsubmit="handleSearch(event)">
+            <input
+              type="text"
+              name="query"
+              placeholder="Search..."
+              class="flex-1 bg-[#1e1e1e] text-white placeholder-gray-400 px-4 py-2 rounded-l-full focus:outline-none focus:ring-2 focus:ring-green-400"
+            />
+            <button
+              type="submit"
+              class="bg-green-400 text-black px-4 py-2 rounded-r-full hover:bg-green-500 transition"
+            >
+              <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+          </form>
+        </div>
+        <!-- end of dropdown -->
+      </nav>
+      <!-- end of navbar -->
+    </div>
+
+    <script>
+      const btnMenu = document.getElementById("btnMenu");
+      const mobileMenu = document.getElementById("mobileMenu");
+
+      btnMenu.addEventListener("click", () => {
+        if (mobileMenu.classList.contains("opacity-0")) {
+          mobileMenu.classList.remove(
+            "opacity-0",
+            "-translate-y-2",
+            "pointer-events-none",
+          );
+          mobileMenu.classList.add("opacity-100", "translate-y-0");
+        } else {
+          mobileMenu.classList.add(
+            "opacity-0",
+            "-translate-y-2",
+            "pointer-events-none",
+          );
+          mobileMenu.classList.remove("opacity-100", "translate-y-0");
+        }
+      });
+
+      function handleSearch(event) {
+        event.preventDefault();
+        const query = event.target.query.value.trim();
+        if (query) console.log("Searching for:", query);
+      }
+    </script>
+  </body>
+</html>
