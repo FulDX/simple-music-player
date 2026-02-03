@@ -127,7 +127,7 @@ export default class MusicApp {
     this.#highlightActiveRow();
   }
 
-  // ---------------- Private Methods ----------------
+  // Private Methods
   #formatTime(time) {
     const minutes = Math.floor(time / 60);
     let seconds = Math.floor(time % 60);
@@ -141,9 +141,7 @@ export default class MusicApp {
       row.classList.add("hover:bg-green-400/10");
     });
 
-    const activeRow = document.querySelector(
-      `.row-song[data-index="${this.#index}"]`,
-    );
+    const activeRow = document.querySelector(`.row-song[data-index="${this.#index}"]`);
     if (activeRow) {
       activeRow.classList.remove("hover:bg-green-400/10");
       activeRow.classList.add("bg-green-400/20");
