@@ -524,6 +524,7 @@
           <div>
             <label class="block text-sm text-gray-400 mb-1">Song's Name</label>
             <input
+              id="inputTitle"
               type="text"
               class="w-full bg-[#121212] border border-white/10 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400"
             />
@@ -533,6 +534,7 @@
           <div>
             <label class="block text-sm text-gray-400 mb-1">Artist</label>
             <input
+              id="inputArtist"
               type="text"
               class="w-full bg-[#121212] border border-white/10 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400"
             />
@@ -542,6 +544,7 @@
           <div>
             <label class="block text-sm text-gray-400 mb-1">Album</label>
             <input
+              id="inputAlbum"
               type="text"
               class="w-full bg-[#121212] border border-white/10 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400"
             />
@@ -551,17 +554,18 @@
           <div>
             <label class="block text-sm text-gray-400 mb-1">Upload Image</label>
             <input
+              id="inputImage"
               type="file"
               accept="image/*"
               class="w-full text-sm text-gray-300 file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border-0 file:bg-green-400 file:text-black hover:file:bg-green-500"
             />
-
           </div>
 
           <!-- Song File -->
           <div>
             <label class="block text-sm text-gray-400 mb-1">Upload Song</label>
             <input
+              id="inputAudio"
               type="file"
               accept="audio/*"
               class="w-full text-sm text-gray-300 file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border-0 file:bg-green-400 file:text-black hover:file:bg-green-500"
@@ -578,8 +582,8 @@
               Cancel
             </button>
             <button
-              id="btnSubmitUpload"
-              type="submit"
+              id="btnUpload"
+              type="button"
               class="px-4 py-2 rounded-lg bg-green-400 text-black font-semibold hover:bg-green-500 transition"
             >
               Upload
@@ -759,7 +763,6 @@
       const btnFullscreen = document.getElementById("btnFullscreen");
       const fullscreenPlayer = document.getElementById("fullscreenPlayer");
 
-
       const isDesktop = window.matchMedia("(min-width: 768px)");
 
       function handleMiniPlayerClick(e) {
@@ -768,7 +771,7 @@
       }
 
       function handleFullscreenButtonClick(e) {
-        e.stopPropagation(); 
+        e.stopPropagation();
         openFullscreen();
       }
 
@@ -783,7 +786,7 @@
 
       function openFullscreen() {
         fullscreenPlayer.classList.remove("translate-y-full");
-        document.body.classList.add("overflow-hidden"); 
+        document.body.classList.add("overflow-hidden");
       }
 
       function closeFullscreen() {
