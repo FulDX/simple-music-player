@@ -5,7 +5,6 @@ export default class MusicApp {
 
   constructor(songs) {
     this.songs = songs.map((song) => {
-      // Jika src atau img adalah Blob, buat URL sementara
       const src =
         song.src instanceof Blob ? URL.createObjectURL(song.src) : song.src;
       const img =
@@ -31,7 +30,7 @@ export default class MusicApp {
     this.#registerEvents();
   }
 
-  // ---------------- Public Methods ----------------
+  // Public Methods 
   play() {
     this.audio.play();
     this.ctrlIcons.forEach((icon) => {
@@ -103,7 +102,6 @@ export default class MusicApp {
   }
 
   updateSongs(newSongs) {
-    // Update list lagu baru (setiap src/img Blob akan diubah ke URL)
     this.songs = newSongs.map((song) => {
       const src =
         song.src instanceof Blob ? URL.createObjectURL(song.src) : song.src;
@@ -111,7 +109,6 @@ export default class MusicApp {
         song.img instanceof Blob ? URL.createObjectURL(song.img) : song.img;
       return { ...song, src, img };
     });
-    // Reload lagu pertama
     this.loadSong(this.#index);
   }
 
