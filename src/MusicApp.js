@@ -5,16 +5,16 @@ export default class MusicApp {
 
   constructor(songs) {
     this.songs = songs;
-    this.slider = document.getElementById("slider");
+    this.slider = document.querySelectorAll(".slider-song");
     this.song = document.getElementById("song");
-    this.ctrlIcon = document.querySelector("#btnCtrl i");
-    this.currentTimeEl = document.getElementById("current-time");
-    this.durationEl = document.getElementById("duration");
-    this.btnShuffle = document.getElementById("btnShuffle");
-    this.btnRepeat = document.getElementById("btnRepeat");
-    this.titleEl = document.getElementById("title");
-    this.artistEl = document.getElementById("artist");
-    this.imgEl = document.getElementById("image");
+    this.ctrlIcons = document.querySelectorAll(".btn-play i");
+    this.currentTimeEl = document.querySelectorAll(".current-time");
+    this.durationEl = document.querySelectorAll(".duration");
+    this.btnShuffles = document.querySelectorAll(".btn-shuffle");
+    this.btnRepeats = document.querySelectorAll(".btn-repeat");
+    this.titleEl = document.querySelectorAll(".title-song");
+    this.artistEl = document.querySelectorAll(".artist-song");
+    this.imgEl = document.querySelectorAll(".img-song");
 
     this.loadSong(this.#index);
     this.#registerEvents();
@@ -23,18 +23,28 @@ export default class MusicApp {
   // Public Methods
   play() {
     this.song.play();
-    this.ctrlIcon.classList.add("fa-pause");
-    this.ctrlIcon.classList.remove("fa-play");
+    this.ctrlIcons.forEach((icon) => {
+      icon.classList.add("fa-pause");
+      icon.classList.remove("fa-play");
+    });
   }
 
   pause() {
     this.song.pause();
-    this.ctrlIcon.classList.add("fa-play");
-    this.ctrlIcon.classList.remove("fa-pause");
+    this.ctrlIcons.forEach((icon) => {
+      icon.classList.add("fa-play");
+      icon.classList.remove("fa-pause");
+    });
   }
 
   togglePlay() {
     this.song.paused ? this.play() : this.pause();
+  }
+
+  playSong(index) {
+    this.#index = index;
+    this.loadSong(index);
+    this.play();
   }
 
   next() {
@@ -51,30 +61,48 @@ export default class MusicApp {
 
   toggleRepeat() {
     this.#isRepeat = !this.#isRepeat;
-    this.btnRepeat.classList.toggle("text-green-400", this.#isRepeat);
+
+    this.btnRepeats.forEach((btn) => {
+      btn.classList.toggle("text-green-400", this.#isRepeat);
+      btn.classList.toggle("hover:text-white", !this.#isRepeat);
+    });
 
     if (this.#isRepeat) {
       this.#isShuffle = false;
-      this.btnShuffle.classList.remove("text-green-400");
+      this.btnShuffles.forEach((btn) => {
+        btn.classList.remove("text-green-400");
+        btn.classList.add("hover:text-white");
+      });
     }
   }
 
   toggleShuffle() {
     this.#isShuffle = !this.#isShuffle;
-    this.btnShuffle.classList.toggle("text-green-400", this.#isShuffle);
+
+    this.btnShuffles.forEach((btn) => {
+      btn.classList.toggle("text-green-400", this.#isShuffle);
+      btn.classList.toggle("hover:text-white", !this.#isShuffle);
+    });
 
     if (this.#isShuffle) {
       this.#isRepeat = false;
-      this.btnRepeat.classList.remove("text-green-400");
+      this.btnRepeats.forEach((btn) => {
+        btn.classList.remove("text-green-400");
+        btn.classList.add("hover:text-white");
+      });
     }
   }
 
   loadSong(index) {
     const songData = this.songs[index];
-    this.titleEl.textContent = songData.title;
-    this.artistEl.textContent = songData.artist;
+
+    this.titleEl.forEach((el) => (el.textContent = songData.title));
+    this.artistEl.forEach((el) => (el.textContent = songData.artist));
+    this.imgEl.forEach((el) => (el.src = songData.img));
+
     this.song.src = songData.src;
-    this.imgEl.src = songData.img;
+
+    this.#highlightActiveRow(); 
   }
 
   // Private Methods
@@ -85,6 +113,21 @@ export default class MusicApp {
     return minutes + ":" + seconds;
   }
 
+  #highlightActiveRow() {
+    document.querySelectorAll(".row-song").forEach((row) => {
+      row.classList.remove("bg-green-400/20");
+      row.classList.add("hover:bg-green-400/10");
+    });
+
+    const activeRow = document.querySelector(
+      `.row-song[data-index="${this.#index}"]`,
+    );
+    if (activeRow) {
+      activeRow.classList.remove("hover:bg-green-400/10");
+      activeRow.classList.add("bg-green-400/20");
+    }
+  }
+
   #handleSongEnd() {
     if (this.#isRepeat) {
       this.song.currentTime = 0;
@@ -92,32 +135,53 @@ export default class MusicApp {
     } else if (this.#isShuffle) {
       let random;
       do {
-        random = Math.floor(Math.random() * songs.length);
+        random = Math.floor(Math.random() * this.songs.length);
       } while (random === this.#index);
       this.#index = random;
       this.loadSong(this.#index);
       this.play();
     } else {
-        this.next();
+      this.next();
     }
   }
 
   #updateSlider() {
-    this.slider.value = this.song.currentTime;
-    this.currentTimeEl.textContent = this.#formatTime(this.song.currentTime);
+    this.slider.forEach((slider) => {
+      slider.value = this.song.currentTime;
+      this.#updateSliderBackground(slider);
+    });
+
+    this.currentTimeEl.forEach((el) => {
+      el.textContent = this.#formatTime(this.song.currentTime);
+    });
+  }
+
+  #updateSliderBackground(slider) {
+    const percent = (slider.value / slider.max) * 100;
+    slider.style.background = `linear-gradient(to right, #22c55e ${percent}%, #444 ${percent}%)`;
   }
 
   #setDuration() {
-    this.slider.max = this.song.duration;
-    this.durationEl.textContent = this.#formatTime(this.song.duration);
+    this.slider.forEach((slider) => {
+      slider.max = this.song.duration;
+      this.#updateSliderBackground(slider);
+    });
+
+    this.durationEl.forEach((el) => {
+      el.textContent = this.#formatTime(this.song.duration);
+    });
   }
 
-  #seek() {
-    this.song.currentTime = this.slider.value;
+  #seek(e) {
+    const slider = e.target;
+    this.song.currentTime = slider.value;
+    this.#updateSliderBackground(slider);
   }
 
   #registerEvents() {
-    this.slider.addEventListener("input", () => this.#seek());
+    this.slider.forEach((slider) => {
+      slider.addEventListener("input", (e) => this.#seek(e));
+    });
     this.song.addEventListener("timeupdate", () => this.#updateSlider());
     this.song.addEventListener("loadedmetadata", () => this.#setDuration());
     this.song.addEventListener("ended", () => this.#handleSongEnd());

@@ -10,34 +10,43 @@
   }
 }
 
-/* Track (jalur slider) */
+/* RESET */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+/* TRACK */
 input[type="range"]::-webkit-slider-runnable-track {
-  height: 6px;
-  background: #22c55e; /* hijau */
-  border-radius: 9999px;
+  height: 4px;
+  border-radius: 999px;
 }
 
 input[type="range"]::-moz-range-track {
-  height: 6px;
-  background: #22c55e;
-  border-radius: 9999px;
+  height: 4px;
+  border-radius: 999px;
 }
 
-/* Thumb (bulatan yang digeser) */
+/* THUMB (BULET PUTIH) */
 input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 16px;
-  height: 16px;
+  height: 14px;
+  width: 14px;
+  border-radius: 50%;
   background: white;
-  border-radius: 9999px;
-  margin-top: -5px; /* biar pas di tengah track */
+  margin-top: -5px; 
 }
 
 input[type="range"]::-moz-range-thumb {
-  width: 16px;
-  height: 16px;
+  height: 14px;
+  width: 14px;
+  border-radius: 50%;
   background: white;
-  border-radius: 9999px;
   border: none;
 }
+
+
+

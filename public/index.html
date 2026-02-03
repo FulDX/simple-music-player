@@ -8,109 +8,811 @@
     <link rel="stylesheet" href="../assets/fontawesome.min.css" />
     <title>Musica</title>
   </head>
-  <body class="bg-[#121212] text-white">
-    <div class="grid">
-      <!-- header -->
-      <div class="relative flex items-center h-14 px-6 py-3 sm:h-18 lg:h-20">
-        <button class="h-10">
-          <i class="fa-solid fa-house text-2xl sm:text-3xl lg:text-4xl"></i>
-        </button>
-        <h1
-          class="absolute left-1/2 -translate-x-1/2 text-4xl font-semibold text-green-400 sm:text-5xl lg:text-6xl"
-        >
-          Musica
-        </h1>
-        <button class="ml-auto h-10">
-          <i class="fa-solid fa-user text-2xl sm:text-3xl lg:text-4xl"></i>
-        </button>
-      </div>
-      <!-- media -->
-      <!-- MEDIA + INFO WRAPPER -->
-      <div
-        class="py-5 lg:py-20 lg:px-10 flex flex-col items-center lg:justify-evenly text-center lg:flex-row lg:text-left lg:items-center lg:gap-10"
+  <body class="bg-[#121212] text-white m-0 pb-24">
+    <div
+      class="min-h-screen lg:grid lg:grid-cols-[200px_1fr] lg:grid-rows-[60px_1fr] lg:gap-0"
+    >
+      <!-- Sidebar / Navbar desktop -->
+      <aside
+        class="hidden lg:flex lg:flex-col bg-[#121212] p-4 gap-4 fixed top-0 left-0 h-screen w-[200px]"
       >
-        <!-- Cover -->
-        <img
-          id="image"
-          src="/media/img/1.jpg"
-          alt=""
-          class="w-88 h-88 object-cover rounded-3xl shadow-2xl lg:w-96 lg:h-96"
-        />
-        <!-- Title + Artist + Controls -->
-        <div
-          class="mt-6 lg:mt-0 gap-6 flex flex-col w-full max-w-88 lg:max-w-200 lg:h-96 min-w-0 lg:justify-between"
+        <button
+          class="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-green-400/20 transition"
         >
-          <!-- Song Info -->
-          <div class="text-center lg:mt-0 lg:text-left">
-            <h1
-              id="title"
-              class="text-3xl mb-1 lg:mb-4 font-semibold lg:text-5xl truncate"
-            >
-              Ini Judul
-            </h1>
-            <h2 id="artist" class="text-gray-400 text-lg lg:text-2xl truncate">
-              Ini subjudul
-            </h2>
-          </div>
-          <!-- Bottom Section (Slider + Controls) -->
-          <div class="flex flex-col gap-6">
-            <!-- Slider -->
-            <div class="w-full max-w-200 min-w-0">
-              <input
-                id="slider"
-                type="range"
-                min="0"
-                max="100"
-                value="0"
-                class="w-full appearance-none bg-transparent cursor-pointer"
-              />
-              <div class="flex justify-between text-xs text-gray-400">
-                <span id="current-time">0:00</span>
-                <span id="duration">0:00</span>
-              </div>
+          <i class="fa-solid fa-music"></i>
+          <span>Music Library</span>
+        </button>
+        <button
+          class="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-green-400/20 transition"
+        >
+          <i class="fa-regular fa-circle-play"></i>
+          <span>Playlist</span>
+        </button>
+        <button
+          class="btn-upload flex items-center gap-2 px-3 py-2 rounded-md hover:bg-green-400/20 transition"
+        >
+          <i class="fa-solid fa-upload"></i>
+          <span>Upload</span>
+        </button>
+      </aside>
+      <!-- End of sidebar -->
+
+      <!-- Header desktop -->
+      <header
+        class="hidden lg:flex items-center justify-between px-10 bg-[#121212] fixed top-0 left-[200px] right-0 h-[60px] z-40"
+      >
+        <h1 class="text-2xl font-bold text-green-400">Musica</h1>
+        <form class="flex items-center" onsubmit="handleSearch(event)">
+          <input
+            type="text"
+            name="query"
+            placeholder="Search..."
+            class="bg-[#1e1e1e] text-white placeholder-gray-400 px-4 py-2 rounded-l-full focus:outline-none focus:ring-2 focus:ring-green-400"
+          />
+          <button
+            type="submit"
+            class="bg-green-400 text-black px-4 py-2 rounded-r-full hover:bg-green-500 transition"
+          >
+            <i class="fa-solid fa-magnifying-glass"></i>
+          </button>
+        </form>
+      </header>
+      <!-- End of header -->
+
+      <!-- Main content -->
+      <main
+        class="lg:col-start-2 lg:col-end-3 lg:row-start-2 lg:row-end-3 pt-20 lg:pt-6 md:col-start-2 md:col-end-3 md:row-start-2 md:row-end-3 md:pt-6 md:mt-6"
+      >
+        <div
+          class="py-5 flex flex-col items-center lg:px-10 lg:justify-evenly text-center lg:flex-row lg:text-left lg:items-center lg:gap-10 md:px-10 md:justify-evenly md:flex-row md:text-left md:items-center md:gap-10"
+        >
+          <!-- Cover -->
+          <img
+            id="imageCover"
+            src="/media/img/1.jpg"
+            alt=""
+            class="w-60 h-60 object-cover rounded-3xl shadow-2xl md:w-65 md:h-65 lg:w-70 lg:h-70"
+          />
+          <!-- Title + Artist + Controls -->
+          <div
+            class="mt-6 lg:mt-0 md:mt-0 gap-6 flex flex-col w-full max-w-60 lg:max-w-200 lg:h-70 md:max-w-200 md:h-70 min-w-0 md:justify-between"
+          >
+            <!-- Song Info -->
+            <div class="text-center lg:mt-0 lg:text-left md:mt-0 md:text-left">
+              <h1
+                id="titleCover"
+                class="text-3xl mb-1 lg:mb-4 font-semibold lg:text-7xl md:text-5xl truncate"
+              >
+                Playlist
+              </h1>
+              <h2
+                id="artistCover"
+                class="text-gray-400 text-lg lg:text-2xl truncate md:text-xl"
+              >
+                Ini subjudul
+              </h2>
             </div>
-            <!-- Controls -->
             <div
               class="w-full max-w-200 flex items-center justify-between min-w-0"
             >
-              <button onclick="" id="btnShuffle" class="text-xl lg:text-2xl">
-                <i class="fa-solid fa-shuffle"></i>
-              </button>
-              <div class="flex items-center gap-6 lg:gap-10">
+              <div class="flex items-center gap-4 lg:gap-10 md:gap-5">
+                <div class="lg:hidden md:hidden"></div>
                 <button
                   onclick=""
-                  id="btnPrev"
-                  class="active:scale-90 transition w-12 h-12 flex items-center justify-center rounded-full bg-green-400 text-black text-lg lg:w-16 lg:h-16 lg:text-xl"
-                >
-                  <i class="fa-solid fa-backward-step"></i>
-                </button>
-                <button
-                  onclick=""
-                  id="btnCtrl"
-                  class="active:scale-90 transition w-14 h-14 flex items-center justify-center rounded-full bg-green-400 text-black text-xl shadow-lg lg:w-20 lg:h-20 lg:text-2xl"
+                  class="btn-play active:scale-90 transition w-14 h-14 flex items-center justify-center rounded-full bg-green-400 text-black text-xl shadow-lg lg:w-20 lg:h-20 lg:text-2xl"
                 >
                   <i class="fa-solid fa-play"></i>
                 </button>
                 <button
                   onclick=""
-                  id="btnNext"
-                  class="active:scale-90 transition w-12 h-12 flex items-center justify-center rounded-full bg-green-400 text-black text-lg lg:w-16 lg:h-16 lg:text-xl"
+                  id="btnShuffle"
+                  class="active:scale-90 transition w-14 h-14 flex items-center justify-center text-lg lg:w-16 lg:h-16 lg:text-3xl"
                 >
-                  <i class="fa-solid fa-forward-step"></i>
+                  <i class="fa-solid fa-shuffle"></i>
+                </button>
+
+                <button
+                  class="btn-more active:scale-90 transition w-14 h-14 flex items-center justify-center rounded-full text-lg lg:w-16 lg:h-16 lg:text-3xl"
+                  data-type="player"
+                >
+                  <i class="fa-solid fa-ellipsis"></i>
+                </button>
+
+                <div class="lg:hidden md:hidden"></div>
+              </div>
+            </div>
+          </div>
+          <!-- End of Cover -->
+        </div>
+
+        <!-- Tabel Daftar Lagu -->
+        <div class="group overflow-x-auto border-gray-700 rounded-lg">
+          <table class="min-w-full text-left border-collapse">
+            <!-- Header -->
+            <thead
+              class="text-gray-400 text-sm lg:text-base border-b border-[#454545dc] bg-transparent"
+            >
+              <tr>
+                <th class="px-4 py-3 w-12">#</th>
+                <th class="px-4 py-3">Title</th>
+                <th class="px-4 py-3 hidden md:table-cell">Album</th>
+                <th class="px-4 py-3 text-center">
+                  <i class="fa-regular fa-clock"></i>
+                </th>
+                <th class="px-4 py-3 w-12 text-center">•••</th>
+              </tr>
+            </thead>
+            <!-- End of Header -->
+            <tbody id="tableBody" class="text-white text-sm lg:text-base">
+              <!-- Row Template -->
+              <template id="rowTemplate">
+                <tr
+                  class="cursor-pointer row-song hover:bg-green-400/10 transition"
+                >
+                  <td class="index-table px-4 py-3">1</td>
+                  <td class="px-4 py-3 flex items-center gap-3">
+                    <img
+                      src="/media/img/1.jpg"
+                      alt="cover"
+                      class="img-table w-12 h-12 object-cover rounded-lg"
+                    />
+                    <div class="flex flex-col truncate">
+                      <span class="title-table font-semibold truncate"
+                        >Song A</span
+                      >
+                      <span
+                        class="artist-table text-gray-400 text-xs lg:text-sm truncate"
+                        >Artist X</span
+                      >
+                    </div>
+                  </td>
+                  <td class="album-table px-4 py-3 hidden md:table-cell">
+                    Album X
+                  </td>
+                  <td class="duration-table px-4 py-3 text-center">3:45</td>
+                  <td class="px-4 py-3 text-center">
+                    <button class="btn-more" data-type="song">
+                      <i class="fa-solid fa-ellipsis cursor-pointer"></i>
+                    </button>
+                  </td>
+                </tr>
+              </template>
+              <!-- End of Row Template -->
+            </tbody>
+          </table>
+        </div>
+        <!-- End of Tabel Daftar Lagu -->
+      </main>
+      <!-- End of Main Content -->
+
+      <!-- Dropdown PC (Edit Delete) -->
+      <div
+        id="globalDropdown"
+        class="hidden fixed w-44 bg-[#1e1e1e] border border-white/10 rounded-xl shadow-2xl z-[10000] pointer-events-auto"
+      >
+        <button
+          class="w-full text-left px-4 py-3 hover:bg-green-400/20 transition"
+        >
+          <i
+            class="fa-solid fa-pen-to-square text-green-400 transition group-hover:scale-110"
+          ></i>
+          <span class="text-sm tracking-wide">Edit Song</span>
+        </button>
+
+        <button
+          class="w-full text-left px-4 py-3 hover:bg-red-400/20 transition"
+        >
+          <i
+            class="fa-solid fa-trash text-red-400 transition group-hover:scale-110"
+          ></i>
+          <span class="text-sm tracking-wide">Delete Song</span>
+        </button>
+      </div>
+      <!-- End of Dropdown PC (Edit Delete)-->
+
+      <!-- Mobile Action Sheet -->
+      <div
+        id="mobileSheetOverlay"
+        class="fixed inset-0 bg-black/50 z-[10000] hidden opacity-0 transition"
+      ></div>
+
+      <div
+        id="mobileSheet"
+        class="fixed bottom-0 left-0 w-full bg-[#1e1e1e] rounded-t-2xl z-[10001] translate-y-full transition-transform duration-300"
+      >
+        <div
+          class="p-4 border-b border-white/10 text-center text-gray-400 text-sm"
+        >
+          Song Actions
+        </div>
+
+        <button
+          class="w-full flex items-center gap-4 px-6 py-4 hover:bg-green-400/20 transition"
+        >
+          <i class="fa-solid fa-pen-to-square text-green-400 text-lg"></i>
+          <span>Edit Song</span>
+        </button>
+
+        <button
+          class="w-full flex items-center gap-4 px-6 py-4 hover:bg-red-400/20 transition"
+        >
+          <i class="fa-solid fa-trash text-red-400 text-lg"></i>
+          <span>Delete Song</span>
+        </button>
+
+        <button
+          onclick="hideMobileSheet()"
+          class="w-full py-4 text-center text-gray-400 border-t border-white/10"
+        >
+          Cancel
+        </button>
+      </div>
+      <!-- End of Mobile Action Sheet -->
+
+      <!-- Navbar mobile -->
+      <nav
+        class="lg:hidden fixed top-0 left-0 w-full bg-[#121212] text-white px-4 py-3 flex items-center justify-between shadow-md z-50"
+      >
+        <button id="btnMenu" class="text-2xl z-10">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+        <h1 class="text-2xl font-bold text-green-400">Musica</h1>
+        <button class="text-xl z-10">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </button>
+
+        <!-- Dropdown -->
+        <div
+          id="mobileMenu"
+          class="absolute top-full left-0 w-full bg-[#121212] text-white flex flex-col gap-3 px-6 py-4 shadow-lg transform -translate-y-2 opacity-0 transition-all duration-300 ease-out pointer-events-none"
+        >
+          <button
+            class="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-green-400/20 transition"
+          >
+            <i class="fa-solid fa-music"></i>
+            <span>Music Library</span>
+          </button>
+          <button
+            class="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-green-400/20 transition"
+          >
+            <i class="fa-regular fa-circle-play"></i>
+            <span>Playlist</span>
+          </button>
+          <button
+            class="btn-upload flex items-center gap-2 px-3 py-2 rounded-md hover:bg-green-400/20 transition"
+          >
+            <i class="fa-solid fa-upload"></i>
+            <span>Upload</span>
+          </button>
+
+          <form class="flex items-center mt-2" onsubmit="handleSearch(event)">
+            <input
+              type="text"
+              name="query"
+              placeholder="Search..."
+              class="flex-1 bg-[#1e1e1e] text-white placeholder-gray-400 px-4 py-2 rounded-l-full focus:outline-none focus:ring-2 focus:ring-green-400"
+            />
+            <button
+              type="submit"
+              class="bg-green-400 text-black px-4 py-2 rounded-r-full hover:bg-green-500 transition"
+            >
+              <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+          </form>
+        </div>
+        <!-- End of Dropdown -->
+      </nav>
+      <!-- End of Navbar Mobile -->
+    </div>
+
+    <!-- Mini Player -->
+    <div
+      id="miniPlayer"
+      class="fixed bottom-0 left-0 right-0 bg-[#181818] border-t border-white/10 z-[9999]"
+    >
+      <!-- Content -->
+      <div class="px-4 py-3 flex items-center gap-4">
+        <!-- Left: Cover + Info -->
+        <div class="flex items-center gap-3 min-w-0 flex-1 truncate w-full">
+          <img
+            src="/media/img/1.jpg"
+            class="img-song w-12 h-12 object-cover rounded-lg"
+          />
+          <div class="min-w-0">
+            <p class="title-song font-semibold truncate text-sm">Unknown</p>
+            <p class="artist-song text-gray-400 text-xs truncate">Unknown</p>
+          </div>
+        </div>
+
+        <!-- Desktop Control -->
+        <div
+          class="hidden md:flex flex-col items-center justify-center flex-1 max-w-xl mx-auto"
+        >
+          <div class="flex items-center gap-6 mb-1 text-gray-300">
+            <!-- Shuffle -->
+            <button class="btn-shuffle hover:text-white transition">
+              <i class="fa-solid fa-shuffle"></i>
+            </button>
+
+            <!-- Prev -->
+            <button class="btn-prev hover:text-white transition">
+              <i class="fa-solid fa-backward-step"></i>
+            </button>
+
+            <!-- Play -->
+            <button
+              class="btn-play w-10 h-10 rounded-full bg-green-400 text-black flex items-center justify-center shadow-md hover:scale-105 active:scale-95 transition"
+            >
+              <i class="fa-solid fa-play"></i>
+            </button>
+
+            <!-- Next -->
+            <button class="btn-next hover:text-white transition">
+              <i class="fa-solid fa-forward-step"></i>
+            </button>
+
+            <!-- Repeat -->
+            <button class="btn-repeat hover:text-white transition">
+              <i class="fa-solid fa-repeat"></i>
+            </button>
+          </div>
+
+          <!-- Duration -->
+          <div class="flex items-center gap-2 w-full">
+            <span class="current-time text-xs text-gray-400 w-10 text-right"
+              >0:00</span
+            >
+            <input
+              type="range"
+              value="30"
+              class="slider-song w-full h-1 appearance-none bg-transparent rounded-full"
+            />
+            <span class="duration text-xs text-gray-400 w-10">0:00</span>
+          </div>
+        </div>
+        <!-- End of Desktop Control -->
+
+        <!-- Mobile Control -->
+        <button
+          class="btn-play md:hidden w-12 h-12 rounded-full bg-green-400 text-black flex items-center justify-center shadow-md"
+        >
+          <i class="fa-solid fa-play text-lg"></i>
+        </button>
+        <!-- End of Mobile Control -->
+
+        <!-- Desktop Extras -->
+        <div
+          class="hidden md:flex items-center justify-end gap-5 text-gray-300 flex-1"
+        >
+          <button class="hover:text-white transition">
+            <i class="fa-solid fa-volume-high"></i>
+          </button>
+          <button id="btnFullscreen" class="hover:text-white transition">
+            <i class="fa-solid fa-up-right-and-down-left-from-center"></i>
+          </button>
+        </div>
+      </div>
+      <!-- End of Desktop Extras -->
+    </div>
+    <!-- End of Desktop Control -->
+
+    <!-- Fullscreen Player -->
+    <div
+      id="fullscreenPlayer"
+      class="fixed inset-0 bg-[#121212] z-[10000] translate-y-full transition-transform duration-500 ease-in-out"
+    >
+      <!-- Isinya -->
+      <div class="grid">
+        <!-- Header -->
+        <div class="relative flex items-center h-14 px-6 py-3 sm:h-18 lg:h-20">
+          <button onclick="closeFullscreen()" class="h-10">
+            <i
+              class="fa-solid fa-angle-down text-2xl sm:text-3xl lg:text-4xl"
+            ></i>
+          </button>
+          <h1
+            class="absolute left-1/2 -translate-x-1/2 text-2xl font-semibold sm:text-3xl lg:text-4xl"
+          >
+            Now Playing
+          </h1>
+          <div class="ml-auto h-10"></div>
+        </div>
+        <!-- End of Header -->
+
+        <!-- Info Wrapper -->
+        <div
+          class="py-5 lg:py-20 lg:px-10 flex flex-col items-center lg:justify-evenly text-center lg:flex-row lg:text-left lg:items-center lg:gap-10"
+        >
+          <!-- Cover -->
+          <img
+            src="/media/img/1.jpg"
+            alt=""
+            class="img-song w-88 h-88 object-cover rounded-3xl shadow-2xl lg:w-96 lg:h-96"
+          />
+          <!-- Title + Artist + Controls -->
+          <div
+            class="mt-6 lg:mt-0 gap-6 flex flex-col w-full max-w-88 lg:max-w-200 lg:h-96 min-w-0 lg:justify-between"
+          >
+            <!-- Song Info -->
+            <div class="text-center lg:mt-0 lg:text-left">
+              <h1
+                class="title-song text-3xl mb-1 lg:mb-4 font-semibold lg:text-5xl truncate"
+              >
+                Ini Judul
+              </h1>
+              <h2
+                class="artist-song text-gray-400 text-lg lg:text-2xl truncate"
+              >
+                Ini subjudul
+              </h2>
+            </div>
+            <!-- Bottom Section (Slider + Controls) -->
+            <div class="flex flex-col gap-6">
+              <!-- Slider -->
+              <div class="w-full max-w-200 min-w-0">
+                <input
+                  type="range"
+                  min="0"
+                  max="100"
+                  value="0"
+                  class="slider-song w-full appearance-none bg-transparent cursor-pointer rounded-full"
+                />
+                <div class="flex justify-between text-xs text-gray-400">
+                  <span class="current-time">0:00</span>
+                  <span class="duration">0:00</span>
+                </div>
+              </div>
+              <!-- Controls -->
+              <div
+                class="w-full max-w-200 flex items-center justify-between min-w-0"
+              >
+                <button
+                  onclick=""
+                  class="btn-shuffle text-gray-300 hover:text-white transition text-xl lg:text-2xl"
+                >
+                  <i class="fa-solid fa-shuffle"></i>
+                </button>
+                <div class="flex items-center gap-6 lg:gap-10">
+                  <button
+                    onclick=""
+                    class="btn-prev active:scale-90 transition w-12 h-12 flex items-center justify-center rounded-full bg-green-400 text-black text-lg lg:w-16 lg:h-16 lg:text-xl"
+                  >
+                    <i class="fa-solid fa-backward-step"></i>
+                  </button>
+                  <button
+                    onclick=""
+                    class="btn-play active:scale-90 transition w-14 h-14 flex items-center justify-center rounded-full bg-green-400 text-black text-xl shadow-lg lg:w-20 lg:h-20 lg:text-2xl"
+                  >
+                    <i class="fa-solid fa-play"></i>
+                  </button>
+                  <button
+                    onclick=""
+                    class="btn-next active:scale-90 transition w-12 h-12 flex items-center justify-center rounded-full bg-green-400 text-black text-lg lg:w-16 lg:h-16 lg:text-xl"
+                  >
+                    <i class="fa-solid fa-forward-step"></i>
+                  </button>
+                </div>
+                <button
+                  onclick=""
+                  class="btn-repeat text-gray-300 hover:text-white transition text-xl lg:text-2xl"
+                >
+                  <i class="fa-solid fa-repeat"></i>
                 </button>
               </div>
-              <button onclick="" id="btnRepeat" class="text-xl lg:text-2xl">
-                <i class="fa-solid fa-repeat"></i>
-              </button>
             </div>
           </div>
         </div>
+        <!-- End of Info Wrapper -->
       </div>
     </div>
+
+    <!-- Upload Overlay -->
+    <div
+      id="uploadModal"
+      class="fixed inset-0 bg-black/60 hidden flex items-center justify-center z-[10000]"
+    >
+      <!-- Modal Box -->
+      <div
+        class="bg-[#181818] w-full max-w-md rounded-2xl shadow-2xl p-6 relative"
+      >
+        <!-- Title -->
+        <h2 class="text-xl font-semibold mb-4 text-green-400">Upload Song</h2>
+
+        <!-- Form -->
+        <form class="flex flex-col gap-4">
+          <!-- Song Name -->
+          <div>
+            <label class="block text-sm text-gray-400 mb-1">Song's Name</label>
+            <input
+              type="text"
+              class="w-full bg-[#121212] border border-white/10 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400"
+            />
+          </div>
+
+          <!-- Artist -->
+          <div>
+            <label class="block text-sm text-gray-400 mb-1">Artist</label>
+            <input
+              type="text"
+              class="w-full bg-[#121212] border border-white/10 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400"
+            />
+          </div>
+
+          <!-- Album -->
+          <div>
+            <label class="block text-sm text-gray-400 mb-1">Album</label>
+            <input
+              type="text"
+              class="w-full bg-[#121212] border border-white/10 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400"
+            />
+          </div>
+
+          <!-- Upload Image -->
+          <div>
+            <label class="block text-sm text-gray-400 mb-1">Upload Image</label>
+            <input
+              type="file"
+              accept="image/*"
+              class="w-full text-sm text-gray-300 file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border-0 file:bg-green-400 file:text-black hover:file:bg-green-500"
+            />
+
+          </div>
+
+          <!-- Song File -->
+          <div>
+            <label class="block text-sm text-gray-400 mb-1">Upload Song</label>
+            <input
+              type="file"
+              accept="audio/*"
+              class="w-full text-sm text-gray-300 file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border-0 file:bg-green-400 file:text-black hover:file:bg-green-500"
+            />
+          </div>
+
+          <!-- Buttons -->
+          <div class="flex justify-end gap-3 mt-4">
+            <button
+              id="btnCancelUpload"
+              type="button"
+              class="px-4 py-2 rounded-lg bg-gray-600 hover:bg-gray-500 transition"
+            >
+              Cancel
+            </button>
+            <button
+              id="btnSubmitUpload"
+              type="submit"
+              class="px-4 py-2 rounded-lg bg-green-400 text-black font-semibold hover:bg-green-500 transition"
+            >
+              Upload
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <!-- End of Upload Overlay -->
+
     <audio id="song">
       <source src="../media/mp3/ndak tawu.mp3" type="audio/mpeg" />
       Your browser does not support the audio element.
     </audio>
     <script type="module" src="../src/script.js"></script>
+
+    <script>
+      // Navbar Mobile Script
+      const btnMenu = document.getElementById("btnMenu");
+      const mobileMenu = document.getElementById("mobileMenu");
+
+      btnMenu.addEventListener("click", () => {
+        if (mobileMenu.classList.contains("opacity-0")) {
+          mobileMenu.classList.remove(
+            "opacity-0",
+            "-translate-y-2",
+            "pointer-events-none",
+          );
+          mobileMenu.classList.add("opacity-100", "translate-y-0");
+        } else {
+          mobileMenu.classList.add(
+            "opacity-0",
+            "-translate-y-2",
+            "pointer-events-none",
+          );
+          mobileMenu.classList.remove("opacity-100", "translate-y-0");
+        }
+      });
+      // End of Navbar Mobile Script
+
+      // Global Dropdown Script (Edit/Delete)
+      const dropdown = document.getElementById("globalDropdown");
+      let activeButton = null;
+
+      function positionDropdown(button) {
+        const rect = button.getBoundingClientRect();
+
+        dropdown.style.top = rect.bottom + "px";
+        dropdown.style.left = rect.right - dropdown.offsetWidth + "px";
+      }
+
+      window.addEventListener("scroll", () => {
+        if (!dropdown.classList.contains("hidden")) {
+          hideDropdown();
+          activeButton = null;
+        }
+      });
+
+      document.addEventListener("click", function (e) {
+        const btn = e.target.closest(".btn-more");
+        const clickInsideDropdown = e.target.closest("#globalDropdown");
+
+        if (btn) {
+          if (activeButton === btn && !dropdown.classList.contains("hidden")) {
+            hideDropdown();
+            activeButton = null;
+            return;
+          }
+
+          const type = btn.dataset.type;
+
+          if (window.innerWidth < 1024) {
+            showMobileSheet(type);
+          } else {
+            activeButton = btn;
+            showDropdown(type);
+            positionDropdown(btn);
+          }
+          return;
+        }
+
+        if (!clickInsideDropdown) {
+          hideDropdown();
+          activeButton = null;
+        }
+      });
+
+      window.addEventListener("resize", () => {
+        if (activeButton && !dropdown.classList.contains("hidden")) {
+          positionDropdown(activeButton);
+        }
+      });
+
+      window.addEventListener("scroll", () => {
+        if (activeButton && !dropdown.classList.contains("hidden")) {
+          positionDropdown(activeButton);
+        }
+      });
+
+      function showDropdown(type) {
+        dropdown.classList.remove("hidden");
+
+        if (type === "player") {
+          dropdown.innerHTML = `
+      <button class="w-full text-left px-4 py-3 hover:bg-green-400/20 transition">
+        <i class="fa-solid fa-pen-to-square text-green-400"></i>
+        Edit Playlist
+      </button>
+      <button class="w-full text-left px-4 py-3 hover:bg-red-400/20 transition">
+        <i class="fa-solid fa-trash text-red-400"></i>
+        Delete Playlist
+      </button>
+    `;
+        } else {
+          dropdown.innerHTML = `
+      <button class="w-full text-left px-4 py-3 hover:bg-green-400/20 transition">
+        <i class="fa-solid fa-pen-to-square text-green-400"></i>
+        Edit Song
+      </button>
+      <button class="w-full text-left px-4 py-3 hover:bg-red-400/20 transition">
+        <i class="fa-solid fa-trash text-red-400"></i>
+        Delete Song
+      </button>
+    `;
+        }
+
+        requestAnimationFrame(() => {
+          dropdown.classList.remove("opacity-0", "scale-95");
+          dropdown.classList.add("opacity-100", "scale-100");
+        });
+      }
+
+      function hideDropdown() {
+        dropdown.classList.remove("opacity-100", "scale-100");
+        dropdown.classList.add("opacity-0", "scale-95");
+        setTimeout(() => dropdown.classList.add("hidden"), 150);
+      }
+      // End of Global Dropdown Script
+
+      // Mobile Action Sheet Script
+      const mobileSheet = document.getElementById("mobileSheet");
+      const mobileSheetOverlay = document.getElementById("mobileSheetOverlay");
+
+      function showMobileSheet(type) {
+        mobileSheetOverlay.classList.remove("hidden");
+        setTimeout(() => mobileSheetOverlay.classList.remove("opacity-0"), 10);
+
+        const title = mobileSheet.querySelector("div");
+        const buttons = mobileSheet.querySelectorAll("button");
+        miniPlayer.style.pointerEvents = "none";
+
+        if (type === "player") {
+          title.textContent = "Playlist Actions";
+          buttons[0].innerHTML = `<i class="fa-solid fa-pen-to-square text-green-400 text-lg"></i> Edit Playlist`;
+          buttons[1].innerHTML = `<i class="fa-solid fa-trash text-red-400 text-lg"></i> Delete Playlist`;
+        } else {
+          title.textContent = "Song Actions";
+          buttons[0].innerHTML = `<i class="fa-solid fa-pen-to-square text-green-400 text-lg"></i> Edit Song`;
+          buttons[1].innerHTML = `<i class="fa-solid fa-trash text-red-400 text-lg"></i> Delete Song`;
+        }
+
+        mobileSheet.classList.remove("translate-y-full");
+      }
+
+      function hideMobileSheet() {
+        mobileSheetOverlay.classList.add("opacity-0");
+        mobileSheet.classList.add("translate-y-full");
+        setTimeout(() => mobileSheetOverlay.classList.add("hidden"), 200);
+        miniPlayer.style.pointerEvents = "auto";
+      }
+
+      mobileSheetOverlay.addEventListener("click", hideMobileSheet);
+      // End of Mobile Action Sheet Script
+
+      // Mini Player & Fullscreen Player Script
+      const miniPlayer = document.getElementById("miniPlayer");
+      const btnFullscreen = document.getElementById("btnFullscreen");
+      const fullscreenPlayer = document.getElementById("fullscreenPlayer");
+
+
+      const isDesktop = window.matchMedia("(min-width: 768px)");
+
+      function handleMiniPlayerClick(e) {
+        if (isDesktop.matches) return;
+        openFullscreen();
+      }
+
+      function handleFullscreenButtonClick(e) {
+        e.stopPropagation(); 
+        openFullscreen();
+      }
+
+      miniPlayer.addEventListener("click", handleMiniPlayerClick);
+      btnFullscreen.addEventListener("click", handleFullscreenButtonClick);
+
+      document.querySelectorAll("#miniPlayer .btn-play").forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+          e.stopPropagation();
+        });
+      });
+
+      function openFullscreen() {
+        fullscreenPlayer.classList.remove("translate-y-full");
+        document.body.classList.add("overflow-hidden"); 
+      }
+
+      function closeFullscreen() {
+        fullscreenPlayer.classList.add("translate-y-full");
+        document.body.classList.remove("overflow-hidden");
+      }
+      // End of Mini Player & Fullscreen Player Script
+
+      // Upload Modal Script
+      const btnUpload = document.querySelectorAll(".btn-upload");
+      const uploadModal = document.getElementById("uploadModal");
+      const btnCancelUpload = document.getElementById("btnCancelUpload");
+
+      btnUpload.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          uploadModal.classList.remove("hidden");
+        });
+      });
+
+      btnCancelUpload.addEventListener("click", () => {
+        uploadModal.classList.add("hidden");
+      });
+
+      uploadModal.addEventListener("click", (e) => {
+        if (e.target === uploadModal) {
+          uploadModal.classList.add("hidden");
+        }
+      });
+      // End of Upload Modal Script
+    </script>
   </body>
 </html>

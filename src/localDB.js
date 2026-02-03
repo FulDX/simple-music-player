@@ -11,34 +11,33 @@ export default class localDB {
         localStorage.setItem(this.#namaDatabase, JSON.stringify(value));
     }
 
-    getFromLocal() {
+    getAll() {
         const data = localStorage.getItem(this.#namaDatabase);
-        return data ? JSON.parse(data) : [];
-    }
 
-    addToLocal(newItem) {
-        const oldData = this.getFromLocal();
-        oldData.push(newItem);
-        this.#saveToLocal(oldData)
-    }
-
-    removeFromLocal(index) {
-        const oldData = this.getFromLocal();
-        if (index < 0 || index >= oldData.length) {
-            console.error("Index is not valid");
-            return;
+        try {
+            return JSON.parse(data) || [];
+        } catch {
+            return []
         }
-        oldData.splice(index, 1);
-        this.#saveToLocal(oldData);
     }
 
-    editFromLocal(index, updatedItem) {
-        const oldData = this.getFromLocal();
-        if (index < 0 || index >= oldData.length) {
-            console.error("Index is not valid");
-            return;
-        }
-        oldData[index] = updatedItem;
-        this.#saveToLocal(oldData);
+    add(item) {
+        const data = this.getAll();
+        data.push({id: crypto.randomUUID(), ...item});
+        this.#saveToLocal(data);
+    }
+
+    removeById(id) {
+        const data = this.getAll().filter(item => item.id !== id);
+        this.#saveToLocal(data);
+    }
+
+    updateById(id, updatedItem) {
+        const data = this.getAll().map(item => item.id === id ? {...item, ...updatedItem} : item);
+        this.#saveToLocal(data);
+    }
+
+    clear() {
+        this.#saveToLocal([]);
     }
 }
