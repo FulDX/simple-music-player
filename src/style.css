@@ -1050,11 +1050,6 @@
       margin-bottom: calc(var(--spacing) * 4);
     }
   }
-  .lg\:block {
-    @media (width >= 64rem) {
-      display: block;
-    }
-  }
   .lg\:flex {
     @media (width >= 64rem) {
       display: flex;

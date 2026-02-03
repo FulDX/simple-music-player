@@ -1,64 +1,31 @@
 import MusicApp from "./MusicApp.js";
-import localDB from "./localDB.js";
+import CustomDB from "./CustomDB.js";
 
-const songs = [
-  {
-    title: "時の傷痕 ハジマリノ 鼓動",
-    artist: "Yasunori Mitsuda",
-    album: "Chrono Trigger",
-    src: "../media/mp3/ndak tawu.mp3",
-    img: "../media/img/1.jpg",
-  },
-  {
-    title: "Mimpi Buruk",
-    artist: "Lil Salmonella",
-    album: "Lil Salmonella",
-    src: "../media/mp3/Lil Salmonela - Mimpi Buruk.mp3",
-    img: "../media/img/mimpiburuk.jpg",
-  },
-  {
-    title: "Odorouze",
-    artist: "Yorushika",
-    album: "Yorushika",
-    src: "../media/mp3/odorouze.mp3",
-    img: "../media/img/odorouze.jpg",
-  },
-  {
-    title: "Nandemonaiya",
-    artist: "RADWIMPS",
-    album: "RADWIMPS",
-    src: "../media/mp3/Nandemonaiya.mp3",
-    img: "../media/img/radwimps.jpg",
-  },
-];
+// IndexedDB Init
+async function initDB() {
+  const db = new CustomDB("MusicDB", "songs");
+  await db.open();
 
-const player = new MusicApp(songs);
+  let songs = await db.getAll();
 
-document
-  .querySelectorAll(".btn-play")
-  .forEach((btn) => btn.addEventListener("click", () => player.togglePlay()));
+  if (songs.length === 0) {
+    songs = [];
 
-document
-  .querySelectorAll(".btn-next")
-  .forEach((btn) => btn.addEventListener("click", () => player.next()));
+    for (const song of songs) {
+      await db.add(song);
+    }
+  }
 
-document
-  .querySelectorAll(".btn-prev")
-  .forEach((btn) => btn.addEventListener("click", () => player.prev()));
+  return { db, songs };
+}
 
-document
-  .querySelectorAll(".btn-repeat")
-  .forEach((btn) => btn.addEventListener("click", () => player.toggleRepeat()));
-
-document
-  .querySelectorAll(".btn-shuffle")
-  .forEach((btn) =>
-    btn.addEventListener("click", () => player.toggleShuffle()),
-  );
-
+// Audio Duration
 function getAudioDuration(src) {
   return new Promise((resolve) => {
-    const audio = new Audio(src);
+    const audio = new Audio();
+    if (src instanceof Blob) audio.src = URL.createObjectURL(src);
+    else audio.src = src;
+
     audio.addEventListener("loadedmetadata", () => {
       const minutes = Math.floor(audio.duration / 60);
       let seconds = Math.floor(audio.duration % 60);
@@ -68,32 +35,116 @@ function getAudioDuration(src) {
   });
 }
 
+// Render Table
 const tbody = document.getElementById("tableBody");
 const template = document.getElementById("rowTemplate");
 
-const durations = await Promise.all(songs.map((s) => getAudioDuration(s.src)));
+async function renderSongsTable(songs, player) {
+  tbody.innerHTML = "";
 
-songs.forEach((song, i) => {
-  const clone = template.content.cloneNode(true);
-  const row = clone.querySelector(".row-song");
-  row.dataset.index = i;
+  const durations = await Promise.all(
+    songs.map((s) => getAudioDuration(s.src)),
+  );
 
-  clone.querySelector(".index-table").textContent = i + 1;
-  clone.querySelector(".img-table").src = song.img;
-  clone.querySelector(".title-table").textContent = song.title;
-  clone.querySelector(".artist-table").textContent = song.artist;
-  clone.querySelector(".album-table").textContent = song.album;
-  clone.querySelector(".duration-table").textContent = durations[i];
+  songs.forEach((song, i) => {
+    const clone = template.content.cloneNode(true);
+    const row = clone.querySelector(".row-song");
+    row.dataset.index = i;
 
-  tbody.appendChild(clone);
-});
+    const audioSrc =
+      song.src instanceof Blob ? URL.createObjectURL(song.src) : song.src;
+    const imgSrc =
+      song.img instanceof Blob ? URL.createObjectURL(song.img) : song.img;
 
-tbody.addEventListener("click", (e) => {
-  if (e.target.closest(".btn-more")) return;
+    clone.querySelector(".index-table").textContent = i + 1;
+    clone.querySelector(".img-table").src = imgSrc;
+    clone.querySelector(".title-table").textContent = song.title;
+    clone.querySelector(".artist-table").textContent = song.artist;
+    clone.querySelector(".album-table").textContent = song.album;
+    clone.querySelector(".duration-table").textContent = durations[i];
 
-  const row = e.target.closest(".row-song");
-  if (!row) return;
+    tbody.appendChild(clone);
 
-  const index = row.dataset.index;
-  player.playSong(index);
-});
+    row.addEventListener("click", (e) => {
+      if (e.target.closest(".btn-more")) return;
+      player.playSong(i);
+    });
+  });
+}
+
+// Upload Modal
+function setupUploadModal(player, db) {
+  const uploadModal = document.getElementById("uploadModal");
+  const inputTitle = document.getElementById("inputTitle");
+  const inputArtist = document.getElementById("inputArtist");
+  const inputAlbum = document.getElementById("inputAlbum");
+  const inputImage = document.getElementById("inputImage");
+  const inputAudio = document.getElementById("inputAudio");
+  const btnUploadModal = document.getElementById("btnUpload");
+
+  btnUploadModal.addEventListener("click", async () => {
+    const title = inputTitle.value.trim();
+    const artist = inputArtist.value.trim();
+    const album = inputAlbum.value.trim();
+    const imgFile = inputImage.files[0];
+    const audioFile = inputAudio.files[0];
+
+    if (!title || !artist || !album || !imgFile || !audioFile) {
+      alert("Semua field harus diisi!");
+      return;
+    }
+
+    await db.add({
+      title,
+      artist,
+      album,
+      img: imgFile,
+      src: audioFile,
+    });
+
+    const songs = await db.getAll();
+    await renderSongsTable(songs, player);
+    player.updateSongs(songs);
+
+    uploadModal.classList.add("hidden");
+    inputTitle.value = "";
+    inputArtist.value = "";
+    inputAlbum.value = "";
+    inputImage.value = "";
+    inputAudio.value = "";
+  });
+}
+
+// Init
+async function init() {
+  const { db, songs } = await initDB();
+
+  const player = new MusicApp(songs);
+
+  await renderSongsTable(songs, player);
+
+  // Player controls
+  document
+    .querySelectorAll(".btn-play")
+    .forEach((btn) => btn.addEventListener("click", () => player.togglePlay()));
+  document
+    .querySelectorAll(".btn-next")
+    .forEach((btn) => btn.addEventListener("click", () => player.next()));
+  document
+    .querySelectorAll(".btn-prev")
+    .forEach((btn) => btn.addEventListener("click", () => player.prev()));
+  document
+    .querySelectorAll(".btn-repeat")
+    .forEach((btn) =>
+      btn.addEventListener("click", () => player.toggleRepeat()),
+    );
+  document
+    .querySelectorAll(".btn-shuffle")
+    .forEach((btn) =>
+      btn.addEventListener("click", () => player.toggleShuffle()),
+    );
+
+  setupUploadModal(player, db);
+}
+
+init();

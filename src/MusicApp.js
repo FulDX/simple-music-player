@@ -4,9 +4,20 @@ export default class MusicApp {
   #isShuffle = false;
 
   constructor(songs) {
-    this.songs = songs;
+    this.songs = songs.map((song) => {
+      // Jika src atau img adalah Blob, buat URL sementara
+      const src =
+        song.src instanceof Blob ? URL.createObjectURL(song.src) : song.src;
+      const img =
+        song.img instanceof Blob ? URL.createObjectURL(song.img) : song.img;
+      return { ...song, src, img };
+    });
+
+    this.audio = new Audio();
+    this.currentIndex = 0;
+
+    // DOM Elements
     this.slider = document.querySelectorAll(".slider-song");
-    this.song = document.getElementById("song");
     this.ctrlIcons = document.querySelectorAll(".btn-play i");
     this.currentTimeEl = document.querySelectorAll(".current-time");
     this.durationEl = document.querySelectorAll(".duration");
@@ -20,9 +31,9 @@ export default class MusicApp {
     this.#registerEvents();
   }
 
-  // Public Methods
+  // ---------------- Public Methods ----------------
   play() {
-    this.song.play();
+    this.audio.play();
     this.ctrlIcons.forEach((icon) => {
       icon.classList.add("fa-pause");
       icon.classList.remove("fa-play");
@@ -30,7 +41,7 @@ export default class MusicApp {
   }
 
   pause() {
-    this.song.pause();
+    this.audio.pause();
     this.ctrlIcons.forEach((icon) => {
       icon.classList.add("fa-play");
       icon.classList.remove("fa-pause");
@@ -38,7 +49,7 @@ export default class MusicApp {
   }
 
   togglePlay() {
-    this.song.paused ? this.play() : this.pause();
+    this.audio.paused ? this.play() : this.pause();
   }
 
   playSong(index) {
@@ -61,7 +72,6 @@ export default class MusicApp {
 
   toggleRepeat() {
     this.#isRepeat = !this.#isRepeat;
-
     this.btnRepeats.forEach((btn) => {
       btn.classList.toggle("text-green-400", this.#isRepeat);
       btn.classList.toggle("hover:text-white", !this.#isRepeat);
@@ -78,7 +88,6 @@ export default class MusicApp {
 
   toggleShuffle() {
     this.#isShuffle = !this.#isShuffle;
-
     this.btnShuffles.forEach((btn) => {
       btn.classList.toggle("text-green-400", this.#isShuffle);
       btn.classList.toggle("hover:text-white", !this.#isShuffle);
@@ -93,6 +102,19 @@ export default class MusicApp {
     }
   }
 
+  updateSongs(newSongs) {
+    // Update list lagu baru (setiap src/img Blob akan diubah ke URL)
+    this.songs = newSongs.map((song) => {
+      const src =
+        song.src instanceof Blob ? URL.createObjectURL(song.src) : song.src;
+      const img =
+        song.img instanceof Blob ? URL.createObjectURL(song.img) : song.img;
+      return { ...song, src, img };
+    });
+    // Reload lagu pertama
+    this.loadSong(this.#index);
+  }
+
   loadSong(index) {
     const songData = this.songs[index];
 
@@ -100,17 +122,17 @@ export default class MusicApp {
     this.artistEl.forEach((el) => (el.textContent = songData.artist));
     this.imgEl.forEach((el) => (el.src = songData.img));
 
-    this.song.src = songData.src;
+    this.audio.src = songData.src;
 
-    this.#highlightActiveRow(); 
+    this.#highlightActiveRow();
   }
 
-  // Private Methods
+  // ---------------- Private Methods ----------------
   #formatTime(time) {
-    let minutes = Math.floor(time / 60);
+    const minutes = Math.floor(time / 60);
     let seconds = Math.floor(time % 60);
     if (seconds < 10) seconds = "0" + seconds;
-    return minutes + ":" + seconds;
+    return `${minutes}:${seconds}`;
   }
 
   #highlightActiveRow() {
@@ -130,7 +152,7 @@ export default class MusicApp {
 
   #handleSongEnd() {
     if (this.#isRepeat) {
-      this.song.currentTime = 0;
+      this.audio.currentTime = 0;
       this.play();
     } else if (this.#isShuffle) {
       let random;
@@ -147,12 +169,12 @@ export default class MusicApp {
 
   #updateSlider() {
     this.slider.forEach((slider) => {
-      slider.value = this.song.currentTime;
+      slider.value = this.audio.currentTime;
       this.#updateSliderBackground(slider);
     });
 
     this.currentTimeEl.forEach((el) => {
-      el.textContent = this.#formatTime(this.song.currentTime);
+      el.textContent = this.#formatTime(this.audio.currentTime);
     });
   }
 
@@ -163,18 +185,18 @@ export default class MusicApp {
 
   #setDuration() {
     this.slider.forEach((slider) => {
-      slider.max = this.song.duration;
+      slider.max = this.audio.duration;
       this.#updateSliderBackground(slider);
     });
 
     this.durationEl.forEach((el) => {
-      el.textContent = this.#formatTime(this.song.duration);
+      el.textContent = this.#formatTime(this.audio.duration);
     });
   }
 
   #seek(e) {
     const slider = e.target;
-    this.song.currentTime = slider.value;
+    this.audio.currentTime = slider.value;
     this.#updateSliderBackground(slider);
   }
 
@@ -182,8 +204,8 @@ export default class MusicApp {
     this.slider.forEach((slider) => {
       slider.addEventListener("input", (e) => this.#seek(e));
     });
-    this.song.addEventListener("timeupdate", () => this.#updateSlider());
-    this.song.addEventListener("loadedmetadata", () => this.#setDuration());
-    this.song.addEventListener("ended", () => this.#handleSongEnd());
+    this.audio.addEventListener("timeupdate", () => this.#updateSlider());
+    this.audio.addEventListener("loadedmetadata", () => this.#setDuration());
+    this.audio.addEventListener("ended", () => this.#handleSongEnd());
   }
 }
