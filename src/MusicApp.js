@@ -4,6 +4,8 @@ export default class MusicApp {
   #repeatMode = "off";
   #shuffleQueue = [];
   #shufflePointer = 0;
+  #mute = false;
+  #lastVolume = 1;
 
   constructor(songs) {
     this.songs = songs.map((song) => {
@@ -15,10 +17,13 @@ export default class MusicApp {
     });
 
     this.audio = new Audio();
+    this.audio.volume = 1;
     this.currentIndex = 0;
 
     // DOM Elements
     this.slider = document.querySelectorAll(".slider-song");
+    this.sliderVolume = document.querySelector(".slider-volume");
+    this.btnVolume = document.querySelector(".btn-volume i");
     this.ctrlIcons = document.querySelectorAll(".btn-play i");
     this.currentTimeEl = document.querySelectorAll(".current-time");
     this.durationEl = document.querySelectorAll(".duration");
@@ -31,6 +36,7 @@ export default class MusicApp {
     if (this.songs.length > 0) {
       this.loadSong(this.#index);
     }
+    this.#toggleMiniPlayer(this.songs.length > 0);
     this.#registerEvents();
   }
 
@@ -57,12 +63,12 @@ export default class MusicApp {
 
   playSong(index) {
     if (index === this.#index) {
-      this.#highlightActiveRow(); 
+      this.#highlightActiveRow();
 
       if (this.audio.paused) {
-        this.play(); 
+        this.play();
       }
-      return; 
+      return;
     }
 
     this.#index = index;
@@ -74,7 +80,7 @@ export default class MusicApp {
       this.#shufflePointer = this.#shuffleQueue.indexOf(index);
     }
 
-    this.loadSong(index); 
+    this.loadSong(index);
     this.play();
   }
 
@@ -142,6 +148,25 @@ export default class MusicApp {
         song.img instanceof Blob ? URL.createObjectURL(song.img) : song.img;
       return { ...song, src, img };
     });
+
+    if (this.songs.length === 0) {
+      this.audio.pause();
+      this.audio.src = "";
+      this.#index = 0;
+      this.#toggleMiniPlayer(false);
+      return;
+    }
+
+    if (this.#index >= this.songs.length) {
+      this.#index = this.songs.length - 1;
+    }
+
+    this.#toggleMiniPlayer(true);
+
+    if (this.#isShuffle) {
+      this.#buildShuffleQueue(this.#index);
+    }
+
     this.loadSong(this.#index);
   }
 
@@ -159,12 +184,64 @@ export default class MusicApp {
     this.#highlightActiveRow();
   }
 
+  handleSongDeletion(deletedIndex) {
+    if (this.songs.length === 0) {
+      this.audio.pause();
+      this.audio.src = "";
+      this.#index = 0;
+      this.#highlightActiveRow();
+      this.#toggleMiniPlayer(false);
+      return;
+    }
+
+    if (deletedIndex === this.#index) {
+      this.audio.pause();
+
+      if (deletedIndex < this.songs.length) {
+        this.#index = deletedIndex;
+      } else {
+        this.#index = this.songs.length - 1;
+      }
+
+      this.loadSong(this.#index);
+      this.play();
+      return;
+    }
+
+    if (deletedIndex < this.#index) {
+      this.#index--;
+    }
+
+    this.#highlightActiveRow();
+  }
+
   // Private Methods
   #formatTime(time) {
     const minutes = Math.floor(time / 60);
     let seconds = Math.floor(time % 60);
     if (seconds < 10) seconds = "0" + seconds;
     return `${minutes}:${seconds}`;
+  }
+
+  #toggleMiniPlayer(show) {
+    const mini = document.getElementById("miniPlayer");
+    if (!mini) return;
+
+    if (show) {
+      mini.classList.remove(
+        "translate-y-full",
+        "opacity-0",
+        "pointer-events-none",
+      );
+      mini.classList.add("translate-y-0", "opacity-100");
+    } else {
+      mini.classList.add(
+        "translate-y-full",
+        "opacity-0",
+        "pointer-events-none",
+      );
+      mini.classList.remove("translate-y-0", "opacity-100");
+    }
   }
 
   #buildShuffleQueue(startIndex = 0) {
@@ -264,6 +341,59 @@ export default class MusicApp {
     });
   }
 
+  #updateVolumeBackground(slider) {
+    const percent = slider.value * 100; // karena max = 1
+    slider.style.background = `linear-gradient(to right, #22c55e ${percent}%, #444 ${percent}%)`;
+  }
+
+  #setVolume(e) {
+    const slider = e.target;
+    const value = parseFloat(slider.value);
+
+    this.audio.volume = value;
+    this.#mute = value === 0;
+
+    this.#updateVolumeBackground(slider);
+    this.#updateVolumeIcon();
+  }
+
+  #updateVolumeIcon() {
+    const v = this.audio.volume;
+
+    this.btnVolume.classList.remove(
+      "fa-volume-high",
+      "fa-volume",
+      "fa-volume-low",
+      "fa-volume-xmark",
+    );
+
+    if (v === 0) {
+      this.btnVolume.classList.add("fa-volume-xmark");
+    } else if (v < 0.25) {
+      this.btnVolume.classList.add("fa-volume-low");
+    } else if (v < 0.75) {
+      this.btnVolume.classList.add("fa-volume");
+    } else {
+      this.btnVolume.classList.add("fa-volume-high");
+    }
+  }
+
+  #toggleMute() {
+    if (!this.#mute) {
+      this.#lastVolume = this.audio.volume;
+      this.audio.volume = 0;
+      this.sliderVolume.value = 0;
+      this.#mute = true;
+    } else {
+      this.audio.volume = this.#lastVolume || 1;
+      this.sliderVolume.value = this.audio.volume;
+      this.#mute = false;
+    }
+
+    this.#updateVolumeBackground(this.sliderVolume);
+    this.#updateVolumeIcon();
+  }
+
   #updateSliderBackground(slider) {
     const percent = (slider.value / slider.max) * 100;
     slider.style.background = `linear-gradient(to right, #22c55e ${percent}%, #444 ${percent}%)`;
@@ -290,6 +420,13 @@ export default class MusicApp {
     this.slider.forEach((slider) => {
       slider.addEventListener("input", (e) => this.#seek(e));
     });
+    this.btnVolume.parentElement.addEventListener("click", () =>
+      this.#toggleMute(),
+    );
+    this.audio.addEventListener("volumechange", () => this.#updateVolumeIcon());
+    this.#updateVolumeIcon();
+    this.#updateVolumeBackground(this.sliderVolume);
+    this.sliderVolume.addEventListener("input", (e) => this.#setVolume(e));
     this.audio.addEventListener("timeupdate", () => this.#updateSlider());
     this.audio.addEventListener("loadedmetadata", () => this.#setDuration());
     this.audio.addEventListener("ended", () => this.#handleSongEnd());

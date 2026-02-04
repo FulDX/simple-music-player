@@ -1,8 +1,12 @@
 @import "tailwindcss";
 @layer utilities {
   @keyframes marquee {
-    0%   { transform: translateX(100%); }
-    100% { transform: translateX(-100%); }
+    0% {
+      transform: translateX(100%);
+    }
+    100% {
+      transform: translateX(-100%);
+    }
   }
 
   .animate-marquee {
@@ -16,6 +20,7 @@ input[type="range"] {
   appearance: none;
   background: transparent;
   cursor: pointer;
+  border-radius: 9999px;
 }
 
 /* TRACK */
@@ -37,7 +42,7 @@ input[type="range"]::-webkit-slider-thumb {
   width: 14px;
   border-radius: 50%;
   background: white;
-  margin-top: -5px; 
+  margin-top: -5px;
 }
 
 input[type="range"]::-moz-range-thumb {
@@ -48,5 +53,22 @@ input[type="range"]::-moz-range-thumb {
   border: none;
 }
 
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
 
+/* Track */
+::-webkit-scrollbar-track {
+  background: #121212;
+}
 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #323232;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}

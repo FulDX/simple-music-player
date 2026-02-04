@@ -330,7 +330,9 @@
         >
           <div class="flex items-center gap-6 mb-1 text-gray-300">
             <!-- Shuffle -->
-            <button class="btn-shuffle cursor-pointer hover:text-white transition">
+            <button
+              class="btn-shuffle cursor-pointer hover:text-white transition"
+            >
               <i class="fa-solid fa-shuffle"></i>
             </button>
 
@@ -352,7 +354,9 @@
             </button>
 
             <!-- Repeat -->
-            <button class="btn-repeat cursor-pointer hover:text-white transition">
+            <button
+              class="btn-repeat cursor-pointer hover:text-white transition"
+            >
               <i class="fa-solid fa-repeat"></i>
             </button>
           </div>
@@ -384,10 +388,22 @@
         <div
           class="hidden md:flex items-center justify-end gap-5 text-gray-300 flex-1"
         >
-          <button class="hover:text-white transition">
+          <button class="btn-volume hover:text-white transition">
             <i class="fa-solid fa-volume-high"></i>
           </button>
-          <button id="btnFullscreen" class="cursor-pointer hover:text-white transition">
+          <input
+            type="range"
+            class="slider-volume"
+            min="0"
+            max="1"
+            step="0.01"
+            value="1"
+            class="slider-volume w-20 appearance-none bg-transparent cursor-pointer rounded-full"
+          />
+          <button
+            id="btnFullscreen"
+            class="cursor-pointer hover:text-white transition"
+          >
             <i class="fa-solid fa-up-right-and-down-left-from-center"></i>
           </button>
         </div>
@@ -595,7 +611,7 @@
     <!-- End of Upload Overlay -->
 
     <audio id="song">
-      <source src="../media/mp3/ndak tawu.mp3" type="audio/mpeg" />
+      <source src="" type="audio/mpeg" />
       Your browser does not support the audio element.
     </audio>
     <script type="module" src="../src/script.js"></script>
