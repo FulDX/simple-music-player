@@ -1,7 +1,9 @@
 export default class MusicApp {
   #index = 0;
-  #isRepeat = false;
   #isShuffle = false;
+  #repeatMode = "off";
+  #shuffleQueue = [];
+  #shufflePointer = 0;
 
   constructor(songs) {
     this.songs = songs.map((song) => {
@@ -26,11 +28,13 @@ export default class MusicApp {
     this.artistEl = document.querySelectorAll(".artist-song");
     this.imgEl = document.querySelectorAll(".img-song");
 
-    this.loadSong(this.#index);
+    if (this.songs.length > 0) {
+      this.loadSong(this.#index);
+    }
     this.#registerEvents();
   }
 
-  // Public Methods 
+  // Public Methods
   play() {
     this.audio.play();
     this.ctrlIcons.forEach((icon) => {
@@ -52,8 +56,25 @@ export default class MusicApp {
   }
 
   playSong(index) {
+    if (index === this.#index) {
+      this.#highlightActiveRow(); 
+
+      if (this.audio.paused) {
+        this.play(); 
+      }
+      return; 
+    }
+
     this.#index = index;
-    this.loadSong(index);
+
+    if (this.#isShuffle) {
+      if (this.#shuffleQueue.length !== this.songs.length) {
+        this.#buildShuffleQueue(index);
+      }
+      this.#shufflePointer = this.#shuffleQueue.indexOf(index);
+    }
+
+    this.loadSong(index); 
     this.play();
   }
 
@@ -70,34 +91,46 @@ export default class MusicApp {
   }
 
   toggleRepeat() {
-    this.#isRepeat = !this.#isRepeat;
-    this.btnRepeats.forEach((btn) => {
-      btn.classList.toggle("text-green-400", this.#isRepeat);
-      btn.classList.toggle("hover:text-white", !this.#isRepeat);
-    });
+    if (this.#repeatMode === "off") this.#repeatMode = "all";
+    else if (this.#repeatMode === "all") this.#repeatMode = "one";
+    else this.#repeatMode = "off";
 
-    if (this.#isRepeat) {
-      this.#isShuffle = false;
-      this.btnShuffles.forEach((btn) => {
+    this.btnRepeats.forEach((btn) => {
+      const icon = btn.querySelector("i");
+
+      if (this.#repeatMode === "off") {
         btn.classList.remove("text-green-400");
         btn.classList.add("hover:text-white");
-      });
-    }
+        icon.classList.remove("fa-repeat-1");
+        icon.classList.add("fa-repeat");
+      }
+
+      if (this.#repeatMode === "all") {
+        btn.classList.add("text-green-400");
+        btn.classList.remove("hover:text-white");
+        icon.classList.remove("fa-repeat-1");
+        icon.classList.add("fa-repeat");
+      }
+
+      if (this.#repeatMode === "one") {
+        btn.classList.add("text-green-400");
+        btn.classList.remove("hover:text-white");
+        icon.classList.remove("fa-repeat");
+        icon.classList.add("fa-repeat-1");
+      }
+    });
   }
 
   toggleShuffle() {
     this.#isShuffle = !this.#isShuffle;
+
     this.btnShuffles.forEach((btn) => {
       btn.classList.toggle("text-green-400", this.#isShuffle);
       btn.classList.toggle("hover:text-white", !this.#isShuffle);
     });
 
     if (this.#isShuffle) {
-      this.#isRepeat = false;
-      this.btnRepeats.forEach((btn) => {
-        btn.classList.remove("text-green-400");
-        btn.classList.add("hover:text-white");
-      });
+      this.#buildShuffleQueue(this.#index);
     }
   }
 
@@ -113,14 +146,16 @@ export default class MusicApp {
   }
 
   loadSong(index) {
+    if (!this.songs.length) return;
+
     const songData = this.songs[index];
+    if (!songData) return;
 
     this.titleEl.forEach((el) => (el.textContent = songData.title));
     this.artistEl.forEach((el) => (el.textContent = songData.artist));
     this.imgEl.forEach((el) => (el.src = songData.img));
 
     this.audio.src = songData.src;
-
     this.#highlightActiveRow();
   }
 
@@ -132,13 +167,29 @@ export default class MusicApp {
     return `${minutes}:${seconds}`;
   }
 
+  #buildShuffleQueue(startIndex = 0) {
+    this.#shuffleQueue = this.songs.map((_, i) => i);
+
+    for (let i = this.#shuffleQueue.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [this.#shuffleQueue[i], this.#shuffleQueue[j]] = [
+        this.#shuffleQueue[j],
+        this.#shuffleQueue[i],
+      ];
+    }
+
+    this.#shufflePointer = this.#shuffleQueue.indexOf(startIndex);
+  }
+
   #highlightActiveRow() {
     document.querySelectorAll(".row-song").forEach((row) => {
       row.classList.remove("bg-green-400/20");
       row.classList.add("hover:bg-green-400/10");
     });
 
-    const activeRow = document.querySelector(`.row-song[data-index="${this.#index}"]`);
+    const activeRow = document.querySelector(
+      `.row-song[data-index="${this.#index}"]`,
+    );
     if (activeRow) {
       activeRow.classList.remove("hover:bg-green-400/10");
       activeRow.classList.add("bg-green-400/20");
@@ -146,20 +197,60 @@ export default class MusicApp {
   }
 
   #handleSongEnd() {
-    if (this.#isRepeat) {
+    // ----- Repeat One ------
+    if (this.#repeatMode === "one") {
       this.audio.currentTime = 0;
       this.play();
-    } else if (this.#isShuffle) {
-      let random;
-      do {
-        random = Math.floor(Math.random() * this.songs.length);
-      } while (random === this.#index);
-      this.#index = random;
+      return;
+    }
+
+    // ----- Shuffle Mode -----
+    if (this.#isShuffle) {
+      this.#shufflePointer++;
+
+      // Semua lagu sudah diputar
+      if (this.#shufflePointer >= this.#shuffleQueue.length) {
+        // Shuffle saja -> berhenti
+        if (this.#repeatMode === "off") {
+          this.pause();
+          return;
+        }
+
+        // Shuffle + repeat all -> bikin queue baru
+        if (this.#repeatMode === "all") {
+          this.#buildShuffleQueue();
+          this.#index = this.#shuffleQueue[0];
+          this.loadSong(this.#index);
+          this.play();
+          return;
+        }
+      }
+
+      this.#index = this.#shuffleQueue[this.#shufflePointer];
       this.loadSong(this.#index);
       this.play();
-    } else {
-      this.next();
+      return;
     }
+
+    // ----- No Shuffle -----
+    this.#index++;
+
+    if (this.#index >= this.songs.length) {
+      // Repeat all -> balik ke awal
+      if (this.#repeatMode === "all") {
+        this.#index = 0;
+        this.loadSong(this.#index);
+        this.play();
+        return;
+      }
+
+      // Tidak ada repeat -> berhenti
+      this.pause();
+      return;
+    }
+
+    this.loadSong(this.#index);
+    this.play();
   }
 
   #updateSlider() {

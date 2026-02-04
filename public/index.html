@@ -4,8 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="../src/style.css" />
-    <link rel="stylesheet" href="../assets/all.min.css" />
-    <link rel="stylesheet" href="../assets/fontawesome.min.css" />
+    <link rel="stylesheet" href="../assets/pro/css/all.min.css" />
+    <link rel="stylesheet" href="../assets/pro/css/fontawesome.min.css" />
     <title>Musica</title>
   </head>
   <body class="bg-[#121212] text-white m-0 pb-24">
@@ -69,7 +69,7 @@
           <!-- Cover -->
           <img
             id="imageCover"
-            src="/media/img/1.jpg"
+            src="/media/img/14752899.png"
             alt=""
             class="w-60 h-60 object-cover rounded-3xl shadow-2xl md:w-65 md:h-65 lg:w-70 lg:h-70"
           />
@@ -83,13 +83,13 @@
                 id="titleCover"
                 class="text-3xl mb-1 lg:mb-4 font-semibold lg:text-7xl md:text-5xl truncate"
               >
-                Playlist
+                All Songs
               </h1>
               <h2
                 id="artistCover"
                 class="text-gray-400 text-lg lg:text-2xl truncate md:text-xl"
               >
-                Ini subjudul
+                Sudarsono
               </h2>
             </div>
             <div
@@ -99,20 +99,20 @@
                 <div class="lg:hidden md:hidden"></div>
                 <button
                   onclick=""
-                  class="btn-play active:scale-90 transition w-14 h-14 flex items-center justify-center rounded-full bg-green-400 text-black text-xl shadow-lg lg:w-20 lg:h-20 lg:text-2xl"
+                  class="btn-play cursor-pointer active:scale-90 transition w-14 h-14 flex items-center justify-center rounded-full bg-green-400 text-black text-xl shadow-lg lg:w-20 lg:h-20 lg:text-2xl"
                 >
                   <i class="fa-solid fa-play"></i>
                 </button>
                 <button
                   onclick=""
                   id="btnShuffle"
-                  class="active:scale-90 transition w-14 h-14 flex items-center justify-center text-lg lg:w-16 lg:h-16 lg:text-3xl"
+                  class="cursor-pointer active:scale-90 transition w-14 h-14 flex items-center justify-center text-lg lg:w-16 lg:h-16 lg:text-3xl"
                 >
                   <i class="fa-solid fa-shuffle"></i>
                 </button>
 
                 <button
-                  class="btn-more active:scale-90 transition w-14 h-14 flex items-center justify-center rounded-full text-lg lg:w-16 lg:h-16 lg:text-3xl"
+                  class="btn-more cursor-pointer active:scale-90 transition w-14 h-14 flex items-center justify-center rounded-full text-lg lg:w-16 lg:h-16 lg:text-3xl"
                   data-type="player"
                 >
                   <i class="fa-solid fa-ellipsis"></i>
@@ -200,7 +200,7 @@
         </button>
 
         <button
-          class="w-full text-left px-4 py-3 hover:bg-red-400/20 transition"
+          class="btn-delete w-full text-left px-4 py-3 hover:bg-red-400/20 transition"
         >
           <i
             class="fa-solid fa-trash text-red-400 transition group-hover:scale-110"
@@ -234,14 +234,14 @@
         </button>
 
         <button
-          class="w-full flex items-center gap-4 px-6 py-4 hover:bg-red-400/20 transition"
+          class="btn-delete w-full flex items-center gap-4 px-6 py-4 hover:bg-red-400/20 transition"
         >
           <i class="fa-solid fa-trash text-red-400 text-lg"></i>
           <span>Delete Song</span>
         </button>
 
         <button
-          onclick="hideMobileSheet()"
+          id="btnCancelSheet"
           class="w-full py-4 text-center text-gray-400 border-t border-white/10"
         >
           Cancel
@@ -315,7 +315,7 @@
         <!-- Left: Cover + Info -->
         <div class="flex items-center gap-3 min-w-0 flex-1 truncate w-full">
           <img
-            src="/media/img/1.jpg"
+            src="/media/img/14752899.png"
             class="img-song w-12 h-12 object-cover rounded-lg"
           />
           <div class="min-w-0">
@@ -330,29 +330,29 @@
         >
           <div class="flex items-center gap-6 mb-1 text-gray-300">
             <!-- Shuffle -->
-            <button class="btn-shuffle hover:text-white transition">
+            <button class="btn-shuffle cursor-pointer hover:text-white transition">
               <i class="fa-solid fa-shuffle"></i>
             </button>
 
             <!-- Prev -->
-            <button class="btn-prev hover:text-white transition">
+            <button class="btn-prev cursor-pointer hover:text-white transition">
               <i class="fa-solid fa-backward-step"></i>
             </button>
 
             <!-- Play -->
             <button
-              class="btn-play w-10 h-10 rounded-full bg-green-400 text-black flex items-center justify-center shadow-md hover:scale-105 active:scale-95 transition"
+              class="btn-play cursor-pointer w-10 h-10 rounded-full bg-green-400 text-black flex items-center justify-center shadow-md hover:scale-105 active:scale-95 transition"
             >
               <i class="fa-solid fa-play"></i>
             </button>
 
             <!-- Next -->
-            <button class="btn-next hover:text-white transition">
+            <button class="btn-next cursor-pointer hover:text-white transition">
               <i class="fa-solid fa-forward-step"></i>
             </button>
 
             <!-- Repeat -->
-            <button class="btn-repeat hover:text-white transition">
+            <button class="btn-repeat cursor-pointer hover:text-white transition">
               <i class="fa-solid fa-repeat"></i>
             </button>
           </div>
@@ -364,7 +364,7 @@
             >
             <input
               type="range"
-              value="30"
+              value="0"
               class="slider-song w-full h-1 appearance-none bg-transparent rounded-full"
             />
             <span class="duration text-xs text-gray-400 w-10">0:00</span>
@@ -387,7 +387,7 @@
           <button class="hover:text-white transition">
             <i class="fa-solid fa-volume-high"></i>
           </button>
-          <button id="btnFullscreen" class="hover:text-white transition">
+          <button id="btnFullscreen" class="cursor-pointer hover:text-white transition">
             <i class="fa-solid fa-up-right-and-down-left-from-center"></i>
           </button>
         </div>
@@ -405,7 +405,7 @@
       <div class="grid">
         <!-- Header -->
         <div class="relative flex items-center h-14 px-6 py-3 sm:h-18 lg:h-20">
-          <button onclick="closeFullscreen()" class="h-10">
+          <button onclick="closeFullscreen()" class="h-10 cursor-pointer">
             <i
               class="fa-solid fa-angle-down text-2xl sm:text-3xl lg:text-4xl"
             ></i>
@@ -468,33 +468,33 @@
               >
                 <button
                   onclick=""
-                  class="btn-shuffle text-gray-300 hover:text-white transition text-xl lg:text-2xl"
+                  class="btn-shuffle cursor-pointer text-gray-300 hover:text-white transition text-xl lg:text-2xl"
                 >
                   <i class="fa-solid fa-shuffle"></i>
                 </button>
                 <div class="flex items-center gap-6 lg:gap-10">
                   <button
                     onclick=""
-                    class="btn-prev active:scale-90 transition w-12 h-12 flex items-center justify-center rounded-full bg-green-400 text-black text-lg lg:w-16 lg:h-16 lg:text-xl"
+                    class="btn-prev cursor-pointer active:scale-90 transition w-12 h-12 flex items-center justify-center rounded-full bg-green-400 text-black text-lg lg:w-16 lg:h-16 lg:text-xl hover:scale-105 active:scale-95 transition"
                   >
                     <i class="fa-solid fa-backward-step"></i>
                   </button>
                   <button
                     onclick=""
-                    class="btn-play active:scale-90 transition w-14 h-14 flex items-center justify-center rounded-full bg-green-400 text-black text-xl shadow-lg lg:w-20 lg:h-20 lg:text-2xl"
+                    class="btn-play cursor-pointer active:scale-90 transition w-14 h-14 flex items-center justify-center rounded-full bg-green-400 text-black text-xl shadow-lg lg:w-20 lg:h-20 lg:text-2xl hover:scale-105 active:scale-95 transition"
                   >
                     <i class="fa-solid fa-play"></i>
                   </button>
                   <button
                     onclick=""
-                    class="btn-next active:scale-90 transition w-12 h-12 flex items-center justify-center rounded-full bg-green-400 text-black text-lg lg:w-16 lg:h-16 lg:text-xl"
+                    class="btn-next cursor-pointer active:scale-90 transition w-12 h-12 flex items-center justify-center rounded-full bg-green-400 text-black text-lg lg:w-16 lg:h-16 lg:text-xl hover:scale-105 active:scale-95 transition"
                   >
                     <i class="fa-solid fa-forward-step"></i>
                   </button>
                 </div>
                 <button
                   onclick=""
-                  class="btn-repeat text-gray-300 hover:text-white transition text-xl lg:text-2xl"
+                  class="btn-repeat cursor-pointer text-gray-300 hover:text-white transition text-xl lg:text-2xl"
                 >
                   <i class="fa-solid fa-repeat"></i>
                 </button>
@@ -601,163 +601,6 @@
     <script type="module" src="../src/script.js"></script>
 
     <script>
-      // Navbar Mobile Script
-      const btnMenu = document.getElementById("btnMenu");
-      const mobileMenu = document.getElementById("mobileMenu");
-
-      btnMenu.addEventListener("click", () => {
-        if (mobileMenu.classList.contains("opacity-0")) {
-          mobileMenu.classList.remove(
-            "opacity-0",
-            "-translate-y-2",
-            "pointer-events-none",
-          );
-          mobileMenu.classList.add("opacity-100", "translate-y-0");
-        } else {
-          mobileMenu.classList.add(
-            "opacity-0",
-            "-translate-y-2",
-            "pointer-events-none",
-          );
-          mobileMenu.classList.remove("opacity-100", "translate-y-0");
-        }
-      });
-      // End of Navbar Mobile Script
-
-      // Global Dropdown Script (Edit/Delete)
-      const dropdown = document.getElementById("globalDropdown");
-      let activeButton = null;
-
-      function positionDropdown(button) {
-        const rect = button.getBoundingClientRect();
-
-        dropdown.style.top = rect.bottom + "px";
-        dropdown.style.left = rect.right - dropdown.offsetWidth + "px";
-      }
-
-      window.addEventListener("scroll", () => {
-        if (!dropdown.classList.contains("hidden")) {
-          hideDropdown();
-          activeButton = null;
-        }
-      });
-
-      document.addEventListener("click", function (e) {
-        const btn = e.target.closest(".btn-more");
-        const clickInsideDropdown = e.target.closest("#globalDropdown");
-
-        if (btn) {
-          if (activeButton === btn && !dropdown.classList.contains("hidden")) {
-            hideDropdown();
-            activeButton = null;
-            return;
-          }
-
-          const type = btn.dataset.type;
-
-          if (window.innerWidth < 1024) {
-            showMobileSheet(type);
-          } else {
-            activeButton = btn;
-            showDropdown(type);
-            positionDropdown(btn);
-          }
-          return;
-        }
-
-        if (!clickInsideDropdown) {
-          hideDropdown();
-          activeButton = null;
-        }
-      });
-
-      window.addEventListener("resize", () => {
-        if (activeButton && !dropdown.classList.contains("hidden")) {
-          positionDropdown(activeButton);
-        }
-      });
-
-      window.addEventListener("scroll", () => {
-        if (activeButton && !dropdown.classList.contains("hidden")) {
-          positionDropdown(activeButton);
-        }
-      });
-
-      function showDropdown(type) {
-        dropdown.classList.remove("hidden");
-
-        if (type === "player") {
-          dropdown.innerHTML = `
-      <button class="w-full text-left px-4 py-3 hover:bg-green-400/20 transition">
-        <i class="fa-solid fa-pen-to-square text-green-400"></i>
-        Edit Playlist
-      </button>
-      <button class="w-full text-left px-4 py-3 hover:bg-red-400/20 transition">
-        <i class="fa-solid fa-trash text-red-400"></i>
-        Delete Playlist
-      </button>
-    `;
-        } else {
-          dropdown.innerHTML = `
-      <button class="w-full text-left px-4 py-3 hover:bg-green-400/20 transition">
-        <i class="fa-solid fa-pen-to-square text-green-400"></i>
-        Edit Song
-      </button>
-      <button class="w-full text-left px-4 py-3 hover:bg-red-400/20 transition">
-        <i class="fa-solid fa-trash text-red-400"></i>
-        Delete Song
-      </button>
-    `;
-        }
-
-        requestAnimationFrame(() => {
-          dropdown.classList.remove("opacity-0", "scale-95");
-          dropdown.classList.add("opacity-100", "scale-100");
-        });
-      }
-
-      function hideDropdown() {
-        dropdown.classList.remove("opacity-100", "scale-100");
-        dropdown.classList.add("opacity-0", "scale-95");
-        setTimeout(() => dropdown.classList.add("hidden"), 150);
-      }
-      // End of Global Dropdown Script
-
-      // Mobile Action Sheet Script
-      const mobileSheet = document.getElementById("mobileSheet");
-      const mobileSheetOverlay = document.getElementById("mobileSheetOverlay");
-
-      function showMobileSheet(type) {
-        mobileSheetOverlay.classList.remove("hidden");
-        setTimeout(() => mobileSheetOverlay.classList.remove("opacity-0"), 10);
-
-        const title = mobileSheet.querySelector("div");
-        const buttons = mobileSheet.querySelectorAll("button");
-        miniPlayer.style.pointerEvents = "none";
-
-        if (type === "player") {
-          title.textContent = "Playlist Actions";
-          buttons[0].innerHTML = `<i class="fa-solid fa-pen-to-square text-green-400 text-lg"></i> Edit Playlist`;
-          buttons[1].innerHTML = `<i class="fa-solid fa-trash text-red-400 text-lg"></i> Delete Playlist`;
-        } else {
-          title.textContent = "Song Actions";
-          buttons[0].innerHTML = `<i class="fa-solid fa-pen-to-square text-green-400 text-lg"></i> Edit Song`;
-          buttons[1].innerHTML = `<i class="fa-solid fa-trash text-red-400 text-lg"></i> Delete Song`;
-        }
-
-        mobileSheet.classList.remove("translate-y-full");
-      }
-
-      function hideMobileSheet() {
-        mobileSheetOverlay.classList.add("opacity-0");
-        mobileSheet.classList.add("translate-y-full");
-        setTimeout(() => mobileSheetOverlay.classList.add("hidden"), 200);
-        miniPlayer.style.pointerEvents = "auto";
-      }
-
-      mobileSheetOverlay.addEventListener("click", hideMobileSheet);
-      // End of Mobile Action Sheet Script
-
       // Mini Player & Fullscreen Player Script
       const miniPlayer = document.getElementById("miniPlayer");
       const btnFullscreen = document.getElementById("btnFullscreen");
@@ -794,28 +637,6 @@
         document.body.classList.remove("overflow-hidden");
       }
       // End of Mini Player & Fullscreen Player Script
-
-      // Upload Modal Script
-      const btnUpload = document.querySelectorAll(".btn-upload");
-      const uploadModal = document.getElementById("uploadModal");
-      const btnCancelUpload = document.getElementById("btnCancelUpload");
-
-      btnUpload.forEach((btn) => {
-        btn.addEventListener("click", () => {
-          uploadModal.classList.remove("hidden");
-        });
-      });
-
-      btnCancelUpload.addEventListener("click", () => {
-        uploadModal.classList.add("hidden");
-      });
-
-      uploadModal.addEventListener("click", (e) => {
-        if (e.target === uploadModal) {
-          uploadModal.classList.add("hidden");
-        }
-      });
-      // End of Upload Modal Script
     </script>
   </body>
 </html>

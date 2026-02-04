@@ -1,25 +1,108 @@
 import MusicApp from "./MusicApp.js";
 import CustomDB from "./CustomDB.js";
 
-// IndexedDB Init
-async function initDB() {
-  const db = new CustomDB("MusicDB", "songs");
-  await db.open();
+let songs = [];
+let activeButton = null;
+const dropdown = document.getElementById("globalDropdown");
+const tbody = document.getElementById("tableBody");
+const template = document.getElementById("rowTemplate");
 
-  let songs = await db.getAll();
-
-  if (songs.length === 0) {
-    songs = [];
-
-    for (const song of songs) {
-      await db.add(song);
-    }
-  }
-
-  return { db, songs };
+// ----- DOM Utilities Function ----
+// --- Dropdown Script ---
+function positionDropdown(button) {
+  const rect = button.getBoundingClientRect();
+  dropdown.style.top = rect.bottom + "px";
+  dropdown.style.left = rect.right - dropdown.offsetWidth + "px";
 }
 
-// Audio Duration
+function showDropdown(type) {
+  dropdown.classList.remove("hidden");
+  dropdown.innerHTML = `
+    <button class="w-full text-left px-4 py-3 hover:bg-green-400/20 transition">
+      <i class="fa-solid fa-pen-to-square text-green-400"></i>
+      Edit ${type === "player" ? "Playlist" : "Song"}
+    </button>
+    <button class="btn-delete w-full text-left px-4 py-3 hover:bg-red-400/20 transition">
+      <i class="fa-solid fa-trash text-red-400"></i>
+      Delete ${type === "player" ? "Playlist" : "Song"}
+    </button>
+  `;
+  requestAnimationFrame(() => {
+    dropdown.classList.remove("opacity-0", "scale-95");
+    dropdown.classList.add("opacity-100", "scale-100");
+  });
+}
+
+function hideDropdown() {
+  dropdown.classList.remove("opacity-100", "scale-100");
+  dropdown.classList.add("opacity-0", "scale-95");
+  setTimeout(() => dropdown.classList.add("hidden"), 150);
+}
+// --- End of Dropdown Script ---
+
+// --- Mobile Action Sheet Script ---
+const mobileSheet = document.getElementById("mobileSheet");
+const mobileSheetOverlay = document.getElementById("mobileSheetOverlay");
+const btnCancelSheet = document.getElementById("btnCancelSheet");
+btnCancelSheet.addEventListener("click", hideMobileSheet);
+
+function showMobileSheet(type) {
+  mobileSheetOverlay.classList.remove("hidden");
+  setTimeout(() => mobileSheetOverlay.classList.remove("opacity-0"), 10);
+
+  const title = mobileSheet.querySelector("div");
+  const buttons = mobileSheet.querySelectorAll("button");
+  miniPlayer.style.pointerEvents = "none";
+
+  if (type === "player") {
+    title.textContent = "Playlist Actions";
+    buttons[0].innerHTML = `<i class="fa-solid fa-pen-to-square text-green-400 text-lg"></i> Edit Playlist`;
+    buttons[1].innerHTML = `<i class="fa-solid fa-trash text-red-400 text-lg"></i> Delete Playlist`;
+  } else {
+    title.textContent = "Song Actions";
+    buttons[0].innerHTML = `<i class="fa-solid fa-pen-to-square text-green-400 text-lg"></i> Edit Song`;
+    buttons[1].innerHTML = `<i class="fa-solid fa-trash text-red-400 text-lg"></i> Delete Song`;
+  }
+
+  mobileSheet.classList.remove("translate-y-full");
+}
+
+function hideMobileSheet() {
+  mobileSheetOverlay.classList.add("opacity-0");
+  mobileSheet.classList.add("translate-y-full");
+  setTimeout(() => mobileSheetOverlay.classList.add("hidden"), 200);
+  miniPlayer.style.pointerEvents = "auto";
+}
+
+mobileSheetOverlay.addEventListener("click", hideMobileSheet);
+// --- End of Mobile Action Sheet Script --- 
+
+// Navbar Mobile Script
+const btnMenu = document.getElementById("btnMenu");
+const mobileMenu = document.getElementById("mobileMenu");
+
+btnMenu.addEventListener("click", () => {
+  if (mobileMenu.classList.contains("opacity-0")) {
+    mobileMenu.classList.remove(
+      "opacity-0",
+      "-translate-y-2",
+      "pointer-events-none",
+    );
+    mobileMenu.classList.add("opacity-100", "translate-y-0");
+  } else {
+    mobileMenu.classList.add(
+      "opacity-0",
+      "-translate-y-2",
+      "pointer-events-none",
+    );
+    mobileMenu.classList.remove("opacity-100", "translate-y-0");
+  }
+});
+// End of Navbar Mobile Script
+// ----- End of DOM Utilities Function ----
+
+// ----- Helper Function -----
+// --- Audio Duration Helper ---
 function getAudioDuration(src) {
   return new Promise((resolve) => {
     const audio = new Audio();
@@ -34,19 +117,32 @@ function getAudioDuration(src) {
     });
   });
 }
+// ----- End of Audio Duration Helper -----
+// ----- Helper Function -----
 
-// Render Table
-const tbody = document.getElementById("tableBody");
-const template = document.getElementById("rowTemplate");
+// --- IndexedDB Init ---
+async function initDB() {
+  const db = new CustomDB("MusicDB", "songs");
+  await db.open();
 
-async function renderSongsTable(songs, player) {
+  let songsList = await db.getAll();
+
+  if (songsList.length === 0) {
+    songsList = [];
+  }
+
+  return { db, songs: songsList };
+}
+
+// --- Render Songs Table ---
+async function renderSongsTable(songsArr, player, db) {
   tbody.innerHTML = "";
 
   const durations = await Promise.all(
-    songs.map((s) => getAudioDuration(s.src)),
+    songsArr.map((s) => getAudioDuration(s.src)),
   );
 
-  songs.forEach((song, i) => {
+  songsArr.forEach((song, i) => {
     const clone = template.content.cloneNode(true);
     const row = clone.querySelector(".row-song");
     row.dataset.index = i;
@@ -72,7 +168,7 @@ async function renderSongsTable(songs, player) {
   });
 }
 
-// Upload Modal
+// --- Upload Modal ---
 function setupUploadModal(player, db) {
   const uploadModal = document.getElementById("uploadModal");
   const inputTitle = document.getElementById("inputTitle");
@@ -81,6 +177,18 @@ function setupUploadModal(player, db) {
   const inputImage = document.getElementById("inputImage");
   const inputAudio = document.getElementById("inputAudio");
   const btnUploadModal = document.getElementById("btnUpload");
+  const btnCancel = document.getElementById("btnCancelUpload");
+
+  document.querySelectorAll(".btn-upload").forEach((btn) => {
+    btn.addEventListener("click", () => uploadModal.classList.remove("hidden"));
+  });
+
+  btnCancel.addEventListener("click", () =>
+    uploadModal.classList.add("hidden"),
+  );
+  uploadModal.addEventListener("click", (e) => {
+    if (e.target === uploadModal) uploadModal.classList.add("hidden");
+  });
 
   btnUploadModal.addEventListener("click", async () => {
     const title = inputTitle.value.trim();
@@ -94,16 +202,9 @@ function setupUploadModal(player, db) {
       return;
     }
 
-    await db.add({
-      title,
-      artist,
-      album,
-      img: imgFile,
-      src: audioFile,
-    });
-
-    const songs = await db.getAll();
-    await renderSongsTable(songs, player);
+    await db.add({ title, artist, album, img: imgFile, src: audioFile });
+    songs = await db.getAll();
+    await renderSongsTable(songs, player, db);
     player.updateSongs(songs);
 
     uploadModal.classList.add("hidden");
@@ -115,13 +216,13 @@ function setupUploadModal(player, db) {
   });
 }
 
-// Init
+// --- Init App ---
 async function init() {
-  const { db, songs } = await initDB();
+  const { db, songs: initialSongs } = await initDB();
+  songs = initialSongs;
 
   const player = new MusicApp(songs);
-
-  await renderSongsTable(songs, player);
+  await renderSongsTable(songs, player, db);
 
   // Player controls
   document
@@ -145,6 +246,73 @@ async function init() {
     );
 
   setupUploadModal(player, db);
+
+  // --- Dropdown Global Listener ---
+  document.addEventListener("click", async (e) => {
+    const btn = e.target.closest(".btn-more");
+    const clickInsideDropdown = e.target.closest("#globalDropdown");
+
+    if (btn) {
+      const row = btn.closest(".row-song");
+
+      const type = btn.dataset.type;
+
+      if (window.innerWidth < 1024) {
+        showMobileSheet(type);
+      } else {
+        activeButton = btn;
+        showDropdown(type);
+        positionDropdown(btn);
+      }
+
+      // Delete from dropdown
+      const dropdownDelete = dropdown.querySelector(".btn-delete");
+      if (dropdownDelete) {
+        dropdownDelete.onclick = async () => {
+          const index = row.dataset.index;
+          const song = songs[index];
+          await db.delete(song.id);
+
+          songs = await db.getAll();
+          await renderSongsTable(songs, player, db);
+          player.updateSongs(songs);
+
+          hideDropdown();
+        };
+      }
+
+      const mobileSheetDelete = mobileSheet.querySelector(".btn-delete");
+      if (mobileSheetDelete) {
+        mobileSheetDelete.onclick = async () => {
+          const index = row.dataset.index;
+          const song = songs[index];
+          await db.delete(song.id);
+
+          songs = await db.getAll();
+          await renderSongsTable(songs, player, db);
+          player.updateSongs(songs);
+
+          hideMobileSheet();
+        };
+      }
+      return;
+    }
+
+    if (!clickInsideDropdown) {
+      hideDropdown();
+      activeButton = null;
+    }
+  });
+
+  window.addEventListener("resize", () => {
+    if (activeButton && !dropdown.classList.contains("hidden"))
+      positionDropdown(activeButton);
+  });
+
+  window.addEventListener("scroll", () => {
+    if (activeButton && !dropdown.classList.contains("hidden"))
+      positionDropdown(activeButton);
+  });
 }
 
 init();
