@@ -29,13 +29,11 @@ export default class CustomDB {
     });
   }
 
-  // Simpan lagu (Blob-friendly)
   async add(data) {
     return new Promise((resolve, reject) => {
       const transaction = this.db.transaction(this.storeName, "readwrite");
       const store = transaction.objectStore(this.storeName);
 
-      // Gunakan put supaya bisa overwrite jika id sama (optional)
       const request = store.put(data);
 
       request.onsuccess = () => resolve(request.result);
@@ -43,7 +41,6 @@ export default class CustomDB {
     });
   }
 
-  // Ambil semua lagu
   async getAll() {
     return new Promise((resolve, reject) => {
       const transaction = this.db.transaction(this.storeName, "readonly");
@@ -55,7 +52,6 @@ export default class CustomDB {
     });
   }
 
-  // Hapus lagu
   async delete(id) {
     return new Promise((resolve, reject) => {
       const transaction = this.db.transaction(this.storeName, "readwrite");
@@ -67,7 +63,6 @@ export default class CustomDB {
     });
   }
 
-  // Hapus semua lagu (opsional)
   async clearAll() {
     return new Promise((resolve, reject) => {
       const transaction = this.db.transaction(this.storeName, "readwrite");
