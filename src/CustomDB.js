@@ -73,4 +73,27 @@ export default class CustomDB {
       request.onerror = (e) => reject(e.target.error);
     });
   }
+
+  async update(id, newData) {
+    return new Promise((resolve, reject) => {
+      const transaction = this.db.transaction(this.storeName, "readwrite");
+      const store = transaction.objectStore(this.storeName);
+
+      const getReq = store.get(id);
+
+      getReq.onsuccess = () => {
+        const oldData = getReq.result;
+        if (!oldData) return reject("Data not found");
+
+        const updatedData = { ...oldData, ...newData, id };
+
+        const putReq = store.put(updatedData);
+
+        putReq.onsuccess = () => resolve(updatedData);
+        putReq.onerror = (e) => reject(e.target.error);
+      };
+
+      getReq.onerror = (e) => reject(e.target.error);
+    });
+  }
 }

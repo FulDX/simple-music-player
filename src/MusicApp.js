@@ -167,7 +167,9 @@ export default class MusicApp {
       this.#buildShuffleQueue(this.#index);
     }
 
+    const wasPlaying = !this.audio.paused;
     this.loadSong(this.#index);
+    if (wasPlaying) this.play();
   }
 
   loadSong(index) {

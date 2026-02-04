@@ -3,6 +3,8 @@ import CustomDB from "./CustomDB.js";
 
 let songs = [];
 let activeButton = null;
+let editSongId = null;
+
 const dropdown = document.getElementById("globalDropdown");
 const tbody = document.getElementById("tableBody");
 const template = document.getElementById("rowTemplate");
@@ -75,7 +77,7 @@ function hideMobileSheet() {
 }
 
 mobileSheetOverlay.addEventListener("click", hideMobileSheet);
-// --- End of Mobile Action Sheet Script --- 
+// --- End of Mobile Action Sheet Script ---
 
 // Navbar Mobile Script
 const btnMenu = document.getElementById("btnMenu");
@@ -99,6 +101,25 @@ btnMenu.addEventListener("click", () => {
   }
 });
 // End of Navbar Mobile Script
+
+function openEditModal(song) {
+  const uploadModal = document.getElementById("uploadModal");
+
+  document.querySelector("#uploadModal h2").textContent = "Edit Song";
+  document.getElementById("btnUpload").textContent = "Save Changes";
+
+  inputTitle.value = song.title;
+  inputArtist.value = song.artist;
+  inputAlbum.value = song.album;
+
+  inputImage.value = "";
+  inputAudio.value = "";
+
+  editSongId = song.id;
+
+  uploadModal.classList.remove("hidden");
+}
+
 // ----- End of DOM Utilities Function ----
 
 // ----- Helper Function -----
@@ -197,12 +218,34 @@ function setupUploadModal(player, db) {
     const imgFile = inputImage.files[0];
     const audioFile = inputAudio.files[0];
 
-    if (!title || !artist || !album || !imgFile || !audioFile) {
-      alert("Semua field harus diisi!");
+    if (!title || !artist || !album) {
+      alert("Title, Artist, Album wajib diisi!");
       return;
     }
 
-    await db.add({ title, artist, album, img: imgFile, src: audioFile });
+    // Edit Mode
+    if (editSongId !== null) {
+      const updateData = { title, artist, album };
+
+      if (imgFile) updateData.img = imgFile;
+      if (audioFile) updateData.src = audioFile;
+
+      await db.update(editSongId, updateData);
+
+      editSongId = null;
+      document.querySelector("#uploadModal h2").textContent = "Upload Song";
+      btnUploadModal.textContent = "Upload";
+    }
+
+    // Add Mode
+    else {
+      if (!imgFile || !audioFile) {
+        alert("Image dan Audio wajib diisi!");
+        return;
+      }
+      await db.add({ title, artist, album, img: imgFile, src: audioFile });
+    }
+
     songs = await db.getAll();
     await renderSongsTable(songs, player, db);
     player.updateSongs(songs);
@@ -265,7 +308,28 @@ async function init() {
         positionDropdown(btn);
       }
 
-      // Delete from dropdown
+      // Edit
+      const dropdownEdit = dropdown.querySelector("button:first-child");
+      if (dropdownEdit) {
+        dropdownEdit.onclick = () => {
+          const index = row.dataset.index;
+          const song = songs[index];
+          openEditModal(song);
+          hideDropdown();
+        };
+      }
+
+      const mobileSheetEdit = mobileSheet.querySelector("button:first-of-type");
+      if (mobileSheetEdit) {
+        mobileSheetEdit.onclick = () => {
+          const index = row.dataset.index;
+          const song = songs[index];
+          openEditModal(song);
+          hideMobileSheet();
+        };
+      }
+
+      // Delete
       const dropdownDelete = dropdown.querySelector(".btn-delete");
       if (dropdownDelete) {
         dropdownDelete.onclick = async () => {
