@@ -1,0 +1,11 @@
+directories:
+  output: dist
+  buildResources: build
+appId: com.musica.player
+productName: Musica
+files:
+  - filter:
+      - '**/*'
+win:
+  target: nsis
+electronVersion: 40.1.0

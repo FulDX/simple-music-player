@@ -1,27 +1,40 @@
 {
+  "name": "musica",
+  "version": "1.0.0",
+  "description": "Musica Offline Music Player",
+  "main": "main.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "electron .",
+    "dev": "npx @tailwindcss/cli -i ./src/input.css -o ./src/style.css --watch",
+    "build": "electron-builder"
+  },
   "dependencies": {
     "@tailwindcss/cli": "^4.1.18",
     "tailwindcss": "^4.1.18"
   },
-  "name": "project-1",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "devDependencies": {},
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "npx @tailwindcss/cli -i ./src/input.css -o ./src/style.css --watch"
+  "devDependencies": {
+    "electron": "^40.1.0",
+    "electron-builder": "^26.7.0"
+  },
+  "build": {
+    "appId": "com.musica.player",
+    "productName": "Musica",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "**/*"
+    ],
+    "win": {
+      "target": "nsis"
+    }
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/FulDX/simple-music-player.git"
+    "url": "https://github.com/FulDX/simple-music-player.git"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
-  "bugs": {
-    "url": "https://github.com/FulDX/simple-music-player/issues"
-  },
-  "homepage": "https://github.com/FulDX/simple-music-player#readme"
+  "keywords": ["music", "player", "electron", "offline"],
+  "author": "Musica Dev",
+  "license": "ISC"
 }
